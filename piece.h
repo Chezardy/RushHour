@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h> //The type bool is defined in this file
 
+#define GAME_SIZE 6
 
 /**
  * @file piece.h

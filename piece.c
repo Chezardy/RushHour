@@ -32,10 +32,17 @@ void copy_piece (cpiece src, piece dst){
 }
 
 void move_piece (piece p, dir d, int distance){
-	if (d == UP) p->x -= distance;
-	else if (d == DOWN) p->x += distance;
-	else if (d == LEFT) p->y -= distance;
-	else if (d == RIGHT) p->y += distance;
+	if (!p->is_horizontal) {
+		if (d == UP) p->y += distance;
+		else if (d == DOWN) p->y -= distance;
+	} else {
+		if (d == LEFT) p->x -= distance;
+		if (d == RIGHT) p->x += distance;
+	}
+	/*if (p->y < 0) p->y = 0;
+	else if (p->x < 0) p->x = 0;
+	else if (p->y+get_height(p)-1 >= GAME_SIZE) p->y = GAME_SIZE-get_height(p);
+	else if (p->x+get_width(p)-1 >= GAME_SIZE) p->x = GAME_SIZE-get_width(p);*/
 }
 
 bool intersect(cpiece p1, cpiece p2) {
@@ -60,20 +67,24 @@ int get_y(cpiece p){
 }
 
 int get_height(cpiece p){
-	if (!p->is_horizontal) return 1;
-	if (p->small) return 2;
-	return 3;
-}
-
-int get_width(cpiece p){
 	if (p->is_horizontal) return 1;
 	if (p->small) return 2;
 	return 3;
 }
 
-int main() {
+int get_width(cpiece p){
+	if (!p->is_horizontal) return 1;
+	if (p->small) return 2;
+	return 3;
+}
+
+bool is_horizontal(cpiece p){
+	return p->is_horizontal;
+}
+
+/*int main() {
 	piece p1 = new_piece_rh(1,2,true, false);
 	piece p2 = new_piece_rh(1,0,false,true);
 	if (intersect(p1, p2)) printf("p1 et p2 partage une meme case\n");
 	return 0;
-}
+}*/
