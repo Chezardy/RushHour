@@ -37,8 +37,11 @@ void copy_game (cgame src, game dst){
 		dst->tab[i] = src->tab[i]; 
 	dst->nbMouv = src->nbMouv;
 }
-/*
+
 int game_nb_pieces(cgame g){
 	return sizeof(g->tab)/sizeof(piece);
 }
-*/
+
+cpiece game_piece(cgame g, int piece_num){
+	return g->tab[piece_num];
+}

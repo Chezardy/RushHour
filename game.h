@@ -57,9 +57,8 @@ void copy_game (cgame src, game dst);
 */
 int game_nb_pieces(cgame g);
 
-
 /**
- * @brief Return the piece of g with number bum
+ * @brief Return the piece of g with number num
  * @param piece_num the num of the piece. This value must be between 0 and game_nb_pieces(g)-1.
 */
 cpiece game_piece(cgame g, int piece_num);
