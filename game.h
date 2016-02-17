@@ -46,7 +46,7 @@ game new_game_hr (int nb_pieces, piece *pieces);
 void delete_game (game g);
 
 /**
- * @brief Clone the game dst into the game dst.
+ * @brief Clone the game src into the game dst.
  * @param src the game to copy
  * @param dst the copied game.
  */
