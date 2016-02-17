@@ -32,15 +32,18 @@ void copy_piece (cpiece src, piece dst){
 }
 
 void move_piece (piece p, dir d, int distance){
-	if (d == UP) p->x -= distance;
-	else if (d == DOWN) p->x += distance;
-	else if (d == LEFT) p->y -= distance;
-	else if (d == RIGHT) p->y += distance;
+	if (!p->is_horizontal) { // si la piece est autorisé à bouger verticalement
+		if (d == UP) p->y += distance;
+		else if (d == DOWN) p->y -= distance;
+	} else { // si elle est autorisé à bouger horizontalement
+		if (d == LEFT) p->x -= distance;
+		if (d == RIGHT) p->x += distance;
+	}
 }
 
-bool intersect(cpiece p1, cpiece p2) {
+bool intersect(cpiece p1, cpiece p2) { //Peut surement être amélioré
 	for(int i = 0; i < get_height(p1); ++i) {
-		for(int j = 0; j < get_width(p1); ++j) {
+		for(int j = 0; j < get_width(p1); ++j) { 
 			for(int i2 = 0; i2 < get_height(p2); ++i2) {
 				for(int j2 = 0; j2 < get_width(p2); ++j2) {
 					if (get_y(p1)+i == get_y(p2)+i2 && get_x(p1)+j == get_x(p2)+j2) return true;
@@ -60,20 +63,17 @@ int get_y(cpiece p){
 }
 
 int get_height(cpiece p){
-	if (!p->is_horizontal) return 1;
-	if (p->small) return 2;
-	return 3;
-}
-
-int get_width(cpiece p){
 	if (p->is_horizontal) return 1;
 	if (p->small) return 2;
 	return 3;
 }
 
-int main() {
-	piece p1 = new_piece_rh(1,2,true, false);
-	piece p2 = new_piece_rh(1,0,false,true);
-	if (intersect(p1, p2)) printf("p1 et p2 partage une meme case\n");
-	return 0;
+int get_width(cpiece p){
+	if (!p->is_horizontal) return 1;
+	if (p->small) return 2;
+	return 3;
+}
+
+bool is_horizontal(cpiece p){
+	return p->is_horizontal;
 }

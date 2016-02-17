@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdbool.h> //The type bool is defined in this file
 
-
 /**
  * @file piece.h
  *
