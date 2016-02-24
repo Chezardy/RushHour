@@ -51,7 +51,7 @@ bool game_over_hr(cgame g){
 **/
 bool play_move(game g, int piece_num, dir d, int distance){
 
-	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
+	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)/*/*
 	copy_piece(g->tab[piece_num],tmp_piece); //copie de la pièce en paramètre dans tmp_piece
 
 	switch(d){
@@ -62,7 +62,7 @@ bool play_move(game g, int piece_num, dir d, int distance){
 				if(i==piece_num) continue; // Pour ne pas comparer la pièce à elle-même.
 
 				for(int j=1;j<=distance;j++){
-					move_piece(tmp_piece,LEFT,1); //On déplace tmp_piece de 1 vers la gauche
+					move_piece(tmp_piece,LEFT,1); //On déplace tmp_piece de 1 vers la gauche*/**on peu optimiser je pense .
 					if(intersect(tmp_piece,g->tab[i])) return false; // Si la pièce (+ la distance) chevauche une autre pièce, retourner false.
 				}
 			}
@@ -72,14 +72,47 @@ bool play_move(game g, int piece_num, dir d, int distance){
 
 		case RIGHT:
 			if(get_x(tmp_piece)+distance+get_width(tmp_piece) >= SIZE_GAME || !is_horizontal(tmp_piece)) return false;
+			for (int i=0;i<game_nb_pieces(g);i++){
+				if(i==piece_num) continue;
+				
+				for(int j=0;j<distance;j++){
+				move_piece(tmp_piece,RIGHT,1);
+				if(intersect(tmp_piece,g->tab[i])) return false;
+				}
+			}
+			move_piece(g->tab[piece_num],RIGHT,distance);
+			g->nb_mouv+=distance;
+
 			break;
 
 		case UP:
 			if(get_y(tmp_piece)+distance+get_height(tmp_piece) >= SIZE_GAME || is_horizontal(tmp_piece)) return false;
+			for (int i=0;i<game_nb_pieces(g);i++){
+				if(i==piece_num) continue;
+				
+				for(int j=0;j<distance;j++){
+				move_piece(tmp_piece,UP,1);
+				if(intersect(tmp_piece,g->tab[i])) return false;
+				}
+			}
+			move_piece(g->tab[piece_num],UP,distance);
+			g->nb_mouv+=distance;
+
 			break;
 
 		case DOWN:
 			if(get_y(tmp_piece)-distance < 0 || is_horizontal(tmp_piece)) return false;
+			for (int i=0;i<game_nb_pieces(g);i++){
+				if(i==piece_num) continue;
+				
+				for(int j=0;j<distance;j++){
+				move_piece(tmp_piece,DOWN,1);
+				if(intersect(tmp_piece,g->tab[i])) return false;
+				}
+			}
+			move_piece(g->tab[piece_num],DOWN,distance);
+			g->nb_mouv+=distance;
+
 			break;
 	}
 	delete_piece(tmp_piece); // Supression de la pièce temporaire (free)
