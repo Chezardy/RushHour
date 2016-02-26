@@ -77,3 +77,6 @@ int get_width(cpiece p){
 bool is_horizontal(cpiece p){
 	return p->is_horizontal;
 }
+bool is_small(cpiece p){
+	return p->small;
+}
