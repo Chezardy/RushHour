@@ -2,11 +2,23 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 
 #include "piece.h"
 #include "game.h"
 
+#define RANDOMIZE 50
+
+#define SIZE_GAME 6 // A enlever, doit être présent dans game.h à la place
+
 char *dir_c[] = {"up", "left", "down", "right"}; //Uniquement utile pour comparer avec l'input
+
+/*
+Retourne une nombre aléatoire en a et b (compris)
+*/
+int rand_ab(int a, int b) {
+	return (rand()%((b+1)-a)) + a;
+}
 
 /*
 Retourne true si les 2 chaines sont exactement identiques.
@@ -58,7 +70,38 @@ bool readCommand(char *cmd, int* target, int* direction, int* distance) {
 void DEBUG_display(game currentGame, int nb_pieces) {
 	printf("Pieces :\n");
 	for (int i = 0; i < nb_pieces; ++i) {
-		printf("piece %d : x:%d y:%d\n",i ,get_x(game_piece(currentGame, i)), get_y(game_piece(currentGame, i)));
+		printf("piece %d : x:%d y:%d small:%d hori:%d\n",i ,get_x(game_piece(currentGame, i)), get_y(game_piece(currentGame, i)), 
+			is_small(game_piece(currentGame, i)), is_horizontal(game_piece(currentGame, i)));
+	}
+}
+/*
+genere une piece placé aléatoirement sur la grille, qui ne dépasse pas de la grille et qui ne chevauche pas d'autres pieces
+Attention, generer trop de pieces sur une grille trop petite peut faire boucler cette fonction !
+*/
+void randomizePiece(piece pieces[], int n, int m) {
+	bool 	finished = false;
+	int 	x;
+	int 	y;
+	bool	small;
+	bool	hori;
+	while (!finished) {
+		finished = true;
+		x = rand_ab(0,SIZE_GAME-1);
+		y = rand_ab(0,SIZE_GAME-1);
+		small = rand_ab(0,1);
+		if (x == SIZE_GAME-1) hori = false;
+		else if (x == SIZE_GAME-2 && !small) hori = false;
+		else if (y == SIZE_GAME-1) hori = true;
+		else if (y == SIZE_GAME-2 && !small) hori = true;
+		else hori = rand_ab(0,1);
+		if ((x == 5 && y == 5) || (!small && x >= 4 && y >= 4)) finished = false;
+		pieces[n] = new_piece_rh(x,y,small,hori);
+		for (int i = 0; i < n; ++i) { // si cette piece en chevauche une autre déja placé, on recommence
+			if (intersect(pieces[n], pieces[i])) finished = false; 
+		}
+		if (!finished) {
+			delete_piece(pieces[n]);
+		}
 	}
 }
 
@@ -70,16 +113,25 @@ int main(int argc, char* argv[]) {
 	int 	nb_pieces;
 	game	currentGame;
 	piece*	pieces;
+	
+	srand((unsigned)time(NULL)); 
 
 	newGame:
 	// Generation du niveaux 
-			/// genere juste une grille de test pour l'instant !
+			/// Certaine piece semble se chevaucher dans certain cas (Après les play_move ?), il faudra faire des tests lorsque la fonction d'affichage sera finie
 	nb_pieces = 6;
 	pieces = malloc(nb_pieces*(sizeof(piece)));
-	for (int i = 0; i < nb_pieces; ++i) {
-		pieces[i] = new_piece_rh(i,3,true,true);
+	pieces[0] = new_piece_rh(3,4,true,true); // la 1ere piece est à l'arrivé, en position de partie finie
+	for (int i = 1; i < nb_pieces; ++i) { // on genere les autres pieces aléatoirement
+		randomizePiece(pieces, i, nb_pieces);
 	}
 	currentGame = new_game_hr(nb_pieces, pieces);
+	for (int r = 0; r < RANDOMIZE; ++r) { // et pour finir on fait faire a chaque piece un certain nombre de mouvements aléatoires pour mélanger la grille
+		for (int i = 0; i < nb_pieces; ++i) {
+			if (is_horizontal(game_piece(currentGame, i))) play_move(currentGame, i, (rand_ab(0,1)?1:3), rand_ab(0,5));
+			else play_move(currentGame, i, (rand_ab(0,1)?0:2), rand_ab(0,5));
+		}
+	}
 	
 	// Debut du jeu
 	while (!streq(cmd,"exit")) { // tant qu'on n'entre pas "exit", boucle le programme
@@ -104,8 +156,11 @@ int main(int argc, char* argv[]) {
 				printf("Action impossible\n");
 			}
 			/*Fin du tour*/
-		} else if (cmd[0] != '\0' && !streq(cmd,"exit")) { //usage si la commande est incorrecte et qu'elle n'est pas un "exit"
+		} else if (cmd[0] != '\0' && !streq(cmd,"exit") && !streq(cmd,"new")) { //usage si la commande est incorrecte et qu'elle n'est pas un "exit"
 			printf("usage : <numeros piece> <up/left/down/right> <distance>\nAttention certaines touches, commes les flèches, peuvent changer la commande envoyée\n");
+		} else if (streq(cmd,"new")) {
+			printf("Nouvelle partie\n");
+			goto newGame;
 		}
 	}
 	return EXIT_SUCCESS;
