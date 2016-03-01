@@ -51,7 +51,7 @@ bool game_over_hr(cgame g){
 **/
 bool play_move(game g, int piece_num, dir d, int distance){
 
-	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)/*/*
+	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
 	copy_piece(g->tab[piece_num],tmp_piece); //copie de la pièce en paramètre dans tmp_piece
 
 	switch(d){
@@ -75,7 +75,7 @@ bool play_move(game g, int piece_num, dir d, int distance){
 			for (int i=0;i<game_nb_pieces(g);i++){
 				if(i==piece_num) continue;
 				
-				for(int j=0;j<distance;j++){
+				for(int j=1;j<=distance;j++){
 				move_piece(tmp_piece,RIGHT,1);
 				if(intersect(tmp_piece,g->tab[i])) return false;
 				}
@@ -90,7 +90,7 @@ bool play_move(game g, int piece_num, dir d, int distance){
 			for (int i=0;i<game_nb_pieces(g);i++){
 				if(i==piece_num) continue;
 				
-				for(int j=0;j<distance;j++){
+				for(int j=1;j<=distance;j++){
 				move_piece(tmp_piece,UP,1);
 				if(intersect(tmp_piece,g->tab[i])) return false;
 				}
@@ -105,7 +105,7 @@ bool play_move(game g, int piece_num, dir d, int distance){
 			for (int i=0;i<game_nb_pieces(g);i++){
 				if(i==piece_num) continue;
 				
-				for(int j=0;j<distance;j++){
+				for(int j=1;j<=distance;j++){
 				move_piece(tmp_piece,DOWN,1);
 				if(intersect(tmp_piece,g->tab[i])) return false;
 				}

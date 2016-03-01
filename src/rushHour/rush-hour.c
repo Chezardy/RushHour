@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
 			/// Certaine piece semble se chevaucher dans certain cas (Après les play_move ?), il faudra faire des tests lorsque la fonction d'affichage sera finie
 	nb_pieces = 6;
 	pieces = malloc(nb_pieces*(sizeof(piece)));
-	pieces[0] = new_piece_rh(3,4,true,true); // la 1ere piece est à l'arrivé, en position de partie finie
+	pieces[0] = new_piece_rh(4,3,true,true); // la 1ere piece est à l'arrivé, en position de partie finie
 	for (int i = 1; i < nb_pieces; ++i) { // on genere les autres pieces aléatoirement
 		randomizePiece(pieces, i, nb_pieces);
 	}
