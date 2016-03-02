@@ -9,3 +9,8 @@ include_directories(${RUSH_HOUR_SOURCE_DIR}/src/game
 
 #Le répertoire contenant les codes source
 add_subdirectory(src)
+
+enable_testing()
+
+add_test(piece1 ${RUSH_HOUR_BINARY_DIR}/src/game/tests/test_piece1)
+set_tests_properties(piece1 PROPERTIES TIMEOUT 2)

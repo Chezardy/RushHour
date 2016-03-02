@@ -1,8 +1,13 @@
 #créé l'exécutable rush-hour
-add_executable(rush-hour rush-hour.c)
+add_executable(rush-hourV1 rush-hour.c)
 
 #spécifie la librairie nécessaire pour l'exécutable "rush-hour"
-target_link_libraries(rush-hour game)
+target_link_libraries(rush-hourV1 game)
 
 #spécifie l'emplacement de la librairie
 link_directories(${RUSH_HOUR_BINARY_DIR}/src/game)
+
+#lors de "make install" l'exécutable rush-hourV1 est copié dans le dossier bin
+install(FILES ${RUSH_HOUR_BINARY_DIR}/src/rushHour/rush-hourV1 DESTINATION ${RUSH_HOUR_SOURCE_DIR}/bin
+		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE)
+

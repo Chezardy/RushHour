@@ -1,3 +1,5 @@
+#add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+
 #créé l'exécutable test_piece1
 add_executable(test_piece1 test_piece1.c)
 
