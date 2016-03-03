@@ -54,7 +54,7 @@ void displayGame(game g, int nb_pieces){
 			}
 		}
 	}
-	printf("Nombre de mouvements joué%s : %d\n", ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
+	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
 	printf("%s################%s\n", KWHT, KNRM);
 	for(int y = SIZE_GAME-1; y >= 0; --y){
 		printf("%s #%s",KWHT, KNRM);
@@ -242,7 +242,7 @@ int main(int argc, char* argv[]) {
 					goto newGame;
 				}
 			} else {
-				printf("%sAction impossible\n%s",KRED ,KNRM);
+				printf("\t%sAction impossible%s\n", KRED, KNRM);
 			}
 			/*Fin du tour*/
 		} else if (cmd[0] != '\0' && !streq(cmd,"r") && !streq(cmd,"q")) { //usage si la commande est incorrecte et qu'elle n'est pas un "exit"

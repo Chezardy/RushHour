@@ -50,6 +50,8 @@ bool game_over_hr(cgame g){
 }
 
 bool play_move(game g, int piece_num, dir d, int distance){
+	if ((is_horizontal(g->tab[piece_num]) && (d == 0 || d == 2))
+			|| ((!is_horizontal(g->tab[piece_num])) && (d == 1 || d == 3))) return false;
 	bool move_isAllowed = true;
 	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
 	copy_piece(g->tab[piece_num],tmp_piece); 
