@@ -92,4 +92,6 @@ bool play_move(game g, int piece_num, dir d, int distance);
  */
 int game_nb_moves(cgame g);
 
+void set_nb_moves(game g, int nb);
+
 #endif
