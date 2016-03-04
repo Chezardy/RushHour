@@ -9,21 +9,14 @@
 
 #define RANDOMIZE 80
 
-#define SIZE_GAME 6 // A enlever, doit être présent dans game.h à la place
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-
-#include "piece.h"
-#include "game.h"
-#define SIZE_GAME 6
+// Codes couleurs
+#define USE_COLOR 1
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[41;30m"
 #define KGRN  "\x1B[42;32m"
 #define KWHT  "\x1B[47;37m"
+#define KBLK  "\x1B[40;30m"
 
 #define KYEL  "\x1B[43;30m"
 #define KBLU  "\x1B[44;30m"
@@ -36,40 +29,79 @@
 #define KMAG2  "\x1B[105;30m"
 #define KCYN2  "\x1B[106;30m"
 
-void displayGame(game g, int nb_pieces){
-	int grid[SIZE_GAME][SIZE_GAME];
-	char* color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2};
-	//int nb_tour = game_nb_moves();
-	//int colorIndice = 0;
-	for(int x = 0; x < SIZE_GAME; ++x){
-		for(int y = 0; y < SIZE_GAME; ++y){
+/*
+Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
+La grille affiché a une taille 2 fois supérieur à la grille de jeu.
+*/
+void GridDisplay(game g, int nb_pieces){
+	int 	y_scaled;
+	int 	x_scaled;
+	int 	size;
+	int 	grid[SIZE_GAME*2][SIZE_GAME*2];
+	bool 	nb_displayed[14]; // Utile pour n'afficher le numeros d'une piece qu'une seule fois
+	char* 	color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2}; //tableau des couleurs disponibles pour les pieces
+
+	size = SIZE_GAME*2;
+	for (int i = 0; i < 14; ++i) nb_displayed[i] = false;
+	
+	// initialiser le tableau à -1
+	for(int x = 0; x < SIZE_GAME*2; ++x){
+		for(int y = 0; y < SIZE_GAME*2; ++y){
 			grid[y][x] = -1;
 		}
 	}
-	
+	//Remplissage de la grille avec les pieces, a l'echelle 2:1
 	for (int i = 0; i < nb_pieces; i++) {
 		for (int x = 0; x < get_width(game_piece(g, i)); x++) {
 			for (int y = 0; y < get_height(game_piece(g, i)); y++) {
-				grid[get_y(game_piece(g, i))+y][get_x(game_piece(g, i))+x] = i;
+				x_scaled = (get_x(game_piece(g, i))+x)*2;
+				y_scaled = (get_y(game_piece(g, i))+y)*2;
+				grid[y_scaled][x_scaled] = i;
+				grid[y_scaled+1][x_scaled] = i;
+				grid[y_scaled][x_scaled+1] = i;
+				grid[y_scaled+1][x_scaled+1] = i;
 			}
 		}
 	}
 	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
-	printf("%s################%s\n", KWHT, KNRM);
-	for(int y = SIZE_GAME-1; y >= 0; --y){
-		printf("%s #%s",KWHT, KNRM);
-		for(int x = 0; x < SIZE_GAME; ++x){
-			if (grid[y][x] == -1) printf("%s -", KNRM);
-			else if (grid[y][x] == 0) printf("%s 0", KRED);
-			else printf("%s%2d", color[grid[y][x]%9], grid[y][x]);
+	//affichage bord superieur
+	printf("%s############################%s\n", KWHT, KNRM);
+	for(int y = size-1; y >= 0; --y){
+		//affichage bord gauche
+		printf("%s##%s",KWHT, KNRM);
+		//Puis pour chaques cases en largeur
+		for(int x = 0; x < size; ++x){
+			//Si c'est une case vide, affichage en noir
+			if (grid[y][x] == - 1) printf("%s##", KBLK);
+			//Si c'est la piece 0, affichage en rouge, et si c'est la 1ere case de la piece on affiche son numeros
+			else if (grid[y][x] == 0 && !nb_displayed[0]) { printf("%s 0", KRED); nb_displayed[0] = true; }
+			else if (grid[y][x] == 0) printf("%s  ", KRED);
+			//Si c'est une autre piece, affichage en couleur selon son numeros, 
+			//				et si c'est la 1ere case de la piece on affiche son numeros			
+			else if (!nb_displayed[grid[y][x]]) {printf("%s%2d", color[grid[y][x]%9], grid[y][x]); nb_displayed[grid[y][x]] = true;}
+			else printf("%s  ", color[grid[y][x]%9]);
 		}
-		if (y == 3) printf("%s #%s", KGRN, KNRM);
-		else printf("%s #%s", KWHT, KNRM);
-		if (y == 3) printf("\tr : Relancer");
-		else if (y == 1) printf("\tq : Quitter");
+		//Affichage bord droit (En vert pour la case d'arrivé)
+		if (y/2 == 3) printf("%s##%s", KGRN, KNRM);
+			else printf("%s##%s", KWHT, KNRM);
+		if (y == 7) printf("\tr : Relancer");
+			else if (y == 4) printf("\tq : Quitter");
+		
 		printf("\n");
 	}
-	printf("%s################%s\n", KWHT, KNRM);
+	//affichage bord inferieur
+	printf("%s############################%s\n", KWHT, KNRM);
+}
+/*
+Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
+Affiche les coordonnées et les infos de chaques pieces
+*/
+void TextDisplay(game currentGame, int nb_pieces) {
+	printf("Pieces :\n");
+	for (int i = 0; i < nb_pieces; ++i) {
+		printf("piece %d : x:%d y:%d small:%d hori:%d\n",i ,get_x(game_piece(currentGame, i)), get_y(game_piece(currentGame, i)), 
+			is_small(game_piece(currentGame, i)), is_horizontal(game_piece(currentGame, i)));
+	}
 }
 
 char *dir_c[] = {"up", "left", "down", "right"}; //Uniquement utile pour comparer avec l'input
@@ -85,7 +117,8 @@ int rand_ab(int a, int b) {
 Retourne true si les 2 chaines sont exactement identiques.
 */
 bool streq(char* s1, char* s2) {
-	int i = 1;
+	int 	i = 1;
+	
 	if (s1[0] != s2[0]) return false;
 	while (s1[i] != '\0' && s2[i] != '\0' && i < 20) {
 		if (s1[i] != s2[i]) return false;
@@ -100,13 +133,14 @@ la piece ciblé, la direction du mouvement et la distance a parcourir.
 Renvoie vrai si elle trouve les 3 arguments correctement, faux sinon.
 */
 bool readCommand(char *cmd, int* target, int* direction, int* distance) {
-	char str[3][20]; // char** pour stocker les 3 aguments en string
+	char 	str[3][20]; // char** pour stocker les 3 aguments en string
+	int 	i = 0, j = 0, k = 0;
+
 	for (int i = 0; i < 3; i++) { 		// initialisation à '\0' sur tout les char
 		for (int j = 0; j < 10; j++) {	// |
 			str[i][j] = '\0';			// |
 		}								// |
 	}									// -
-	int i = 0, j = 0, k = 0;
 	while (cmd[i] != '\0' && i < 20 && j < 3) { // parcours cmd et le stock dans str[j]. A chaque espace j++ donc nouvel argument
 		if (cmd[i] == ' ') {					// |
 			j++;								// |
@@ -128,47 +162,44 @@ bool readCommand(char *cmd, int* target, int* direction, int* distance) {
 	return true;
 }
 
-void DEBUG_display(game currentGame, int nb_pieces) {
-	printf("Pieces :\n");
-	for (int i = 0; i < nb_pieces; ++i) {
-		printf("piece %d : x:%d y:%d small:%d hori:%d\n",i ,get_x(game_piece(currentGame, i)), get_y(game_piece(currentGame, i)), 
-			is_small(game_piece(currentGame, i)), is_horizontal(game_piece(currentGame, i)));
-	}
-}
 /*
 genere une piece placé aléatoirement sur la grille, qui ne dépasse pas de la grille et qui ne chevauche pas d'autres pieces
 Attention, generer trop de pieces sur une grille trop petite peut faire boucler cette fonction !
 */
-void randomizePiece(piece pieces[], int n, int m) {
+bool randomizePiece(piece pieces[], int n, int m) {
 	bool 	finished = false;
 	int 	x;
 	int 	y;
 	bool	small;
 	bool	hori;
 	int		try;
+	
 	try = 0;
-	while (try++>100 || !finished) {
+	while (!finished) { 
 		finished = true;
+		//On determine ses coordonées et sa taille aléatoirement
 		x = rand_ab(0,SIZE_GAME-1);
 		y = rand_ab(0,SIZE_GAME-1);
 		small = rand_ab(0,1);
+		// On verifie que ses coordonées soit valides
+		if ((x == 5 && y == 5) || (!small && x >= 4 && y >= 4)) finished = false;
+		// On verifie si sa position implique une orientation obligatoire (si trop près d'un bord), sinon elle est determiné aléatoirement
 		if (x == SIZE_GAME-1) hori = false;
 		else if (x == SIZE_GAME-2 && !small) hori = false;
 		else if (y == SIZE_GAME-1) hori = true;
 		else if (y == SIZE_GAME-2 && !small) hori = true;
 		else hori = rand_ab(0,1);
-		if ((x == 5 && y == 5) || (!small && x >= 4 && y >= 4)) finished = false;
 		pieces[n] = new_piece_rh(x,y,small,hori);
 		for (int i = 0; i < n; ++i) { // si cette piece en chevauche une autre déja placé, on recommence
 			if (intersect(pieces[n], pieces[i])) finished = false; 
 		}
-		//if ((get_x(pieces[n])+get_width(pieces[n])-1 >= SIZE_GAME || get_x(pieces[n]) < 0)
-			//	|| (get_y(pieces[n])+get_height(pieces[n])-1 >= SIZE_GAME || get_y(pieces[n]) < 0)) finished = false;
-	
+		// si la piece n'est pas valide pour une quelconque raison on la supprime
 		if (!finished) {
 			delete_piece(pieces[n]);
 		}
+		if (!finished && try++>100) return false; // timeout pour eviter que le programme ne boucle à l'infini
 	}
+	return true;
 }
 
 int main(int argc, char* argv[]) {
@@ -181,50 +212,63 @@ int main(int argc, char* argv[]) {
 	piece*	pieces;
 	bool	level_isCorrect;
 	int		difficulty;
-	srand((unsigned)time(NULL)); 
-	newGame:
+	
+	srand((unsigned)time(NULL));
+	
+	newGame: // Point de retour pour recommencer une partie
+	
 	// Generation du niveaux 
-			/// Certaine piece semble se chevaucher dans certain cas (Après les play_move ?), il faudra faire des tests lorsque la fonction d'affichage sera finie
 	level_isCorrect = false;
 	nb_pieces = 0;
-
-	while (!level_isCorrect) { 
-		if (nb_pieces == 0) {
-			nb_pieces = rand_ab(7,11);
-			pieces = malloc(nb_pieces*(sizeof(piece)));
-		} else {
-			for (int i = 0; i < nb_pieces; ++i) { // on genere les autres pieces aléatoirement
+	while (!level_isCorrect) {
+		level_isCorrect = true;
+		// Si des pieces sont déjà existantes on les delete
+		if (nb_pieces != 0) {
+			nb_pieces = 0;
+			for (int i = 0; i < nb_pieces; ++i) {
 				delete_piece(pieces[i]);
 			}
 		}
+		//On genere aléatoirement le nombre de pieces
+		nb_pieces = rand_ab(7,14);
+		pieces = malloc(nb_pieces*(sizeof(piece)));
+
 		pieces[0] = new_piece_rh(4,3,true,true); // la 1ere piece est à l'arrivé, en position de partie finie
 		for (int i = 1; i < nb_pieces; ++i) { // on genere les autres pieces aléatoirement
-			randomizePiece(pieces, i, nb_pieces);
+			if (level_isCorrect) level_isCorrect = randomizePiece(pieces, i, nb_pieces);
 		}
-		level_isCorrect = false;
-		currentGame = new_game_hr(nb_pieces, pieces);
-		for (int r = 0; r < RANDOMIZE; ++r) { // et pour finir on fait faire a chaque piece un certain nombre de mouvements aléatoires pour mélanger la grille
-			for (int i = 0; i < nb_pieces; ++i) {
-				if (i == 0) play_move(currentGame, i, 1, 1);
-				else if (is_horizontal(game_piece(currentGame, i))) play_move(currentGame, i, (rand_ab(0,1)?1:3), rand_ab(0,5));
-				else play_move(currentGame, i, (rand_ab(0,1)?0:2), rand_ab(0,5));
+		// si une piece n'a pas réussi à se placer,on arrete la generation et on recommence
+		if (level_isCorrect) {
+			level_isCorrect = false;
+			currentGame = new_game_hr(nb_pieces, pieces);
+			//Le niveaux est créé avec un certain nombre de pieces et en position de partie finie
+			// On melange donc la partie en executant un grand nombre de play_move aléatoires pour chaques pieces
+			for (int r = 0; r < RANDOMIZE; ++r) { 
+				for (int i = 0; i < nb_pieces; ++i) {
+					if (i == 0) play_move(currentGame, i, 1, 1);//La 1ere piece ne bouge que vers la gauche, semble améliorer la complexité moyenne des parties
+					// on effectue les play_move dans des direction que la piece peut suivre
+					else if (is_horizontal(game_piece(currentGame, i))) play_move(currentGame, i, (rand_ab(0,1)?1:3), rand_ab(0,4));
+					else play_move(currentGame, i, (rand_ab(0,1)?0:2), rand_ab(0,4));
+				}
 			}
-		}
-		difficulty = 0;
-		for (int i = 1; i < nb_pieces; ++i) { // verification si il y a au moins une piece devant la rouge
-			for (int y = get_y(game_piece(currentGame, i)); y < get_y(game_piece(currentGame, i))+get_height(game_piece(currentGame, i));++y){
-				if (y == 3 && get_x(game_piece(currentGame, 0))+get_width(game_piece(currentGame, 0)) < get_x(game_piece(currentGame, i))+get_width(game_piece(currentGame, i)) ) {
-					if (++difficulty >= 2) level_isCorrect = true;
+			// On verifie qu'il y ai au moins deux pieces qui bloque la piece rouge pour ne pas que la partie soit trop simple
+			difficulty = 0;
+			for (int i = 1; i < nb_pieces; ++i) {
+				for (int y = get_y(game_piece(currentGame, i)); y < get_y(game_piece(currentGame, i))+get_height(game_piece(currentGame, i));++y){
+					if (y == 3 && get_x(game_piece(currentGame, 0))+get_width(game_piece(currentGame, 0)) < get_x(game_piece(currentGame, i))+get_width(game_piece(currentGame, i)) ) {
+						if (++difficulty >= 2) level_isCorrect = true;
+					}
 				}
 			}
 		}
 	}
+	//creation de la partie terminé, on remet le compteur de mouvement à 0
 	set_nb_moves(currentGame, 0);
+	
 	// Debut du jeu
 	while (!streq(cmd,"q")) { // tant qu'on n'entre pas "exit", boucle le programme
 		// Affichage de la grille
-		//DEBUG_display(currentGame, nb_pieces); // Fonction d'affichage sommaire uniquement pour vérifier que le programme fonctionne
-		displayGame(currentGame, nb_pieces);
+		GridDisplay(currentGame, nb_pieces);
 		// attente de la demande de l'utilisateur
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
@@ -236,18 +280,19 @@ int main(int argc, char* argv[]) {
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
 				if (game_over_hr(currentGame)) {
-					//printf("Partie finie !\n"); // peut-etre ajouter un timer ou une action avant de relancer une partie
-					printf("Partie finie en %d mouvement%s !\n Appuyer sur entrée pour rejouer", game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"));
+					GridDisplay(currentGame, nb_pieces); // on affiche la partie terminé
+					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entrée pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
 					fgets(cmd, 20, stdin);
 					goto newGame;
 				}
 			} else {
+				//Si l'action ne peut pas être réalisé par le play_move
 				printf("\t%sAction impossible%s\n", KRED, KNRM);
 			}
 			/*Fin du tour*/
 		} else if (cmd[0] != '\0' && !streq(cmd,"r") && !streq(cmd,"q")) { //usage si la commande est incorrecte et qu'elle n'est pas un "exit"
 			printf("usage : <numeros piece> <up/left/down/right> <distance>\nAttention certaines touches, commes les flèches, peuvent changer la commande envoyée\n");
-		} else if (streq(cmd,"r")) {
+		} else if (streq(cmd,"r")) { //Si la commande est "r" on relance une partie
 			printf("\n\nNouvelle partie\n");
 			goto newGame;
 		}
