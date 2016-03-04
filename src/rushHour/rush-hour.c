@@ -36,12 +36,10 @@ La grille affiché a une taille 2 fois supérieur à la grille de jeu.
 void GridDisplay(game g, int nb_pieces){
 	int 	y_scaled;
 	int 	x_scaled;
-	int 	size;
 	int 	grid[SIZE_GAME*2][SIZE_GAME*2];
 	bool 	nb_displayed[14]; // Utile pour n'afficher le numeros d'une piece qu'une seule fois
 	char* 	color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2}; //tableau des couleurs disponibles pour les pieces
 
-	size = SIZE_GAME*2;
 	for (int i = 0; i < 14; ++i) nb_displayed[i] = false;
 	
 	// initialiser le tableau à -1
@@ -66,11 +64,11 @@ void GridDisplay(game g, int nb_pieces){
 	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
 	//affichage bord superieur
 	printf("%s############################%s\n", KWHT, KNRM);
-	for(int y = size-1; y >= 0; --y){
+	for(int y = (SIZE_GAME*2)-1; y >= 0; --y){
 		//affichage bord gauche
 		printf("%s##%s",KWHT, KNRM);
 		//Puis pour chaques cases en largeur
-		for(int x = 0; x < size; ++x){
+		for(int x = 0; x < (SIZE_GAME*2); ++x){
 			//Si c'est une case vide, affichage en noir
 			if (grid[y][x] == - 1) printf("%s  ", KNRM);
 			//Si c'est la piece 0, affichage en rouge, et si c'est la 1ere case de la piece on affiche son numeros
@@ -92,6 +90,39 @@ void GridDisplay(game g, int nb_pieces){
 	//affichage bord inferieur
 	printf("%s############################%s\n", KWHT, KNRM);
 }
+
+/*
+Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
+Fonctionnement similaire a DiplayGrid
+*/
+void SimpleDisplay(game g, int nb_pieces){
+	int grid[SIZE_GAME][SIZE_GAME];
+	for(int x = 0; x < SIZE_GAME; ++x){
+		for(int y = 0; y < SIZE_GAME; ++y){
+			grid[y][x] = -1;
+		}
+	}
+	for (int i = 0; i < nb_pieces; i++) {
+		for (int x = 0; x < get_width(game_piece(g, i)); x++) {
+			for (int y = 0; y < get_height(game_piece(g, i)); y++) {
+				grid[get_y(game_piece(g, i))+y][get_x(game_piece(g, i))+x] = i;
+			}
+		}
+	}
+	printf("\n");
+	printf("###############\n");
+	for(int y = SIZE_GAME-1; y >= 0; --y){
+		printf("%s#", KNRM);
+		for(int x = 0; x < SIZE_GAME; ++x){
+			if (grid[y][x] == -1) printf(" -");
+			else printf("%2d", grid[y][x]);
+		}
+		if (y == 3) printf(" =\n");
+		else printf(" #\n");
+	}
+	printf("###############\n");
+}
+
 /*
 Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
 Affiche les coordonnées et les infos de chaques pieces
@@ -212,6 +243,18 @@ int main(int argc, char* argv[]) {
 	piece*	pieces;
 	bool	level_isCorrect;
 	int		difficulty;
+	void	(*display)(game,int);
+
+	if (argc > 1 && streq(argv[1],"-nocolor")) {
+		printf("#Affichage simplifié sans couleur\n");
+		display = &SimpleDisplay;
+	} else if (argc > 1 && streq(argv[1],"-text")) {
+		printf("#Affichage minimaliste\n");
+		display = &TextDisplay;
+	} else {
+		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
+		display = &GridDisplay;
+	} 
 	
 	srand((unsigned)time(NULL));
 	
@@ -268,7 +311,7 @@ int main(int argc, char* argv[]) {
 	// Debut du jeu
 	while (!streq(cmd,"q")) { // tant qu'on n'entre pas "exit", boucle le programme
 		// Affichage de la grille
-		GridDisplay(currentGame, nb_pieces);
+		(*display)(currentGame, nb_pieces);
 		// attente de la demande de l'utilisateur
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
@@ -280,7 +323,7 @@ int main(int argc, char* argv[]) {
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
 				if (game_over_hr(currentGame)) {
-					GridDisplay(currentGame, nb_pieces); // on affiche la partie terminé
+					(*display)(currentGame, nb_pieces); // on affiche la partie terminé
 					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entrée pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
 					fgets(cmd, 20, stdin);
 					goto newGame;
