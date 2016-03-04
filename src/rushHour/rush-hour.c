@@ -72,7 +72,7 @@ void GridDisplay(game g, int nb_pieces){
 		//Puis pour chaques cases en largeur
 		for(int x = 0; x < size; ++x){
 			//Si c'est une case vide, affichage en noir
-			if (grid[y][x] == - 1) printf("%s##", KBLK);
+			if (grid[y][x] == - 1) printf("%s  ", KNRM);
 			//Si c'est la piece 0, affichage en rouge, et si c'est la 1ere case de la piece on affiche son numeros
 			else if (grid[y][x] == 0 && !nb_displayed[0]) { printf("%s 0", KRED); nb_displayed[0] = true; }
 			else if (grid[y][x] == 0) printf("%s  ", KRED);
