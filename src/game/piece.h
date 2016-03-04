@@ -92,8 +92,12 @@ int get_height(cpiece p);
 int get_width(cpiece p);
 
 /**
- * @brief Returns true if the piece is
+ * @brief Returns true if the piece is horizontal.
  */
 bool is_horizontal(cpiece p);
+
+/**
+ * @brief Returns true if the piece is small
+ */
 bool is_small(cpiece p);
 #endif

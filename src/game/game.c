@@ -3,8 +3,6 @@
 #include "game.h"
 #include <assert.h>
 
-#define SIZE_GAME 6
-
 struct game_s {
 	piece *tab;
 	int nb_mouv;
@@ -38,7 +36,6 @@ void copy_game (cgame src, game dst){
 
 int game_nb_pieces(cgame g){
 	return g->nb_pieces;
-	//return sizeof(g->tab)/sizeof(piece);
 }
 
 cpiece game_piece(cgame g, int piece_num){

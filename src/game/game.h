@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include "piece.h"
 
+#define SIZE_GAME 6
+
 /**
  * @file game.h
  *
@@ -87,11 +89,15 @@ bool game_over_hr(cgame g);
 bool play_move(game g, int piece_num, dir d, int distance);
 
 /**
- * @brief Return the number of moves this the beginning of the game g.
+ * @brief Return the number of moves since the beginning of the game g.
  * Remind that move of a single piece of k cells in a single direction counts for k.
  */
 int game_nb_moves(cgame g);
 
+/**
+ * @brief Set the number of moves of the game g.
+ * @param nb the number of moves.
+ */
 void set_nb_moves(game g, int nb);
 
 #endif
