@@ -19,19 +19,19 @@
 #define KCYN2  "\x1B[106;30m"
 
 /*
-Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
-La grille affiché a une taille 2 fois supérieur à la grille de jeu.
+Fonction d'affichage en mode console, dessine une grille reprÃ©sentant le jeu en couleurs.
+La grille affichÃ© a une taille 2 fois supÃ©rieur Ã  la grille de jeu.
 */
 void GridDisplay(game g, int nb_pieces);
 
 /*
-Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
+Affichage simplifiÃ©, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
 Fonctionnement similaire a DiplayGrid
 */
 void SimpleDisplay(game g, int nb_pieces);
 
 /*
-Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
-Affiche les coordonnées et les infos de chaques pieces
+Fontion d'affichage tres simplifiÃ©, a priori uniquement utile pour le dÃ©buggage
+Affiche les coordonnÃ©es et les infos de chaques pieces
 */
 void TextDisplay(game currentGame, int nb_pieces);
