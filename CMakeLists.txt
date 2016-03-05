@@ -13,9 +13,9 @@ add_subdirectory(src)
 enable_testing()
 
 add_test(piece1 ${RUSH_HOUR_BINARY_DIR}/src/game/tests/test_piece1)
-#add_test(play_move ${RUSH_HOUR_BINARY_DIR}/src/game/tests/test_play_move)
+add_test(play_move ${RUSH_HOUR_BINARY_DIR}/src/game/tests/test_play_move)
 
 
 #Si le test dure trop longtemps, il est arrêté
-#set_tests_properties(play_move PROPERTIES TIMEOUT 2)
+set_tests_properties(play_move PROPERTIES TIMEOUT 2)
 set_tests_properties(piece1 PROPERTIES TIMEOUT 2)

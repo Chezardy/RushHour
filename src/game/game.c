@@ -4,33 +4,35 @@
 #include <assert.h>
 
 struct game_s {
-	piece *tab;
+	piece *pieces;
 	int nb_mouv;
 	int nb_pieces;
 };
 
 game new_game_hr (int nb_pieces, piece *pieces){
 	game g = malloc(SIZE_GAME*sizeof(struct game_s));
-	g->tab = malloc(nb_pieces*sizeof(struct piece_s*));
+	g->pieces = malloc(nb_pieces*sizeof(struct piece_s*));
 	for(int i=0;i<nb_pieces;i++)
-		g->tab[i] = pieces[i];
+		g->pieces[i] = pieces[i];
 	g->nb_mouv = 0;
 	g->nb_pieces = nb_pieces;
 	return g;
 }
 
 void delete_game (game g){
-	free(g->tab);
+	for(int i=0;i<g->nb_pieces;i++)
+		delete_piece(g->pieces[i]);
+	free(g->pieces);
 	free(g);
 }
 
 void copy_game (cgame src, game dst){
-	int nSrc = sizeof(src->tab)/sizeof(piece);
-	int nDst = sizeof(dst->tab)/sizeof(piece);
+	int nSrc = sizeof(src->pieces)/sizeof(piece);
+	int nDst = sizeof(dst->pieces)/sizeof(piece);
 	assert(nSrc != nDst);
 
 	for(int i=0;i<nDst;i++)
-		dst->tab[i] = src->tab[i]; 
+		dst->pieces[i] = src->pieces[i]; 
 	dst->nb_mouv = src->nb_mouv;
 }
 
@@ -39,38 +41,38 @@ int game_nb_pieces(cgame g){
 }
 
 cpiece game_piece(cgame g, int piece_num){
-	return g->tab[piece_num];
+	return g->pieces[piece_num];
 }
 
 bool game_over_hr(cgame g){
-	return get_x(g->tab[0])==4 && get_y(g->tab[0])==3;
+	return get_x(g->pieces[0])==4 && get_y(g->pieces[0])==3;
 }
 
 bool play_move(game g, int piece_num, dir d, int distance){
-	if ((is_horizontal(g->tab[piece_num]) && (d == 0 || d == 2))
-			|| ((!is_horizontal(g->tab[piece_num])) && (d == 1 || d == 3))) return false;
+	if ((is_horizontal(g->pieces[piece_num]) && (d == 0 || d == 2))
+			|| ((!is_horizontal(g->pieces[piece_num])) && (d == 1 || d == 3))) return false;
 	bool move_isAllowed = true;
 	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
-	copy_piece(g->tab[piece_num],tmp_piece); 
+	copy_piece(g->pieces[piece_num],tmp_piece); 
 	
 	for (int i = 0; i < distance; i++) { // On decompose le mouvement en déplacement de une case
-		move_piece(g->tab[piece_num], d, 1);
-		if ((get_x(g->tab[piece_num])+get_width(g->tab[piece_num])-1 >= SIZE_GAME || get_x(g->tab[piece_num]) < 0)
-				|| (get_y(g->tab[piece_num])+get_height(g->tab[piece_num])-1 >= SIZE_GAME || get_y(g->tab[piece_num]) < 0)) move_isAllowed = false;
+		move_piece(g->pieces[piece_num], d, 1);
+		if ((get_x(g->pieces[piece_num])+get_width(g->pieces[piece_num])-1 >= SIZE_GAME || get_x(g->pieces[piece_num]) < 0)
+				|| (get_y(g->pieces[piece_num])+get_height(g->pieces[piece_num])-1 >= SIZE_GAME || get_y(g->pieces[piece_num]) < 0)) move_isAllowed = false;
 		for(int p = 0; p < game_nb_pieces(g);++p) { // On verifie si le mouvement est valide (intersect+depassement grille)
-			if (piece_num != p && intersect(g->tab[piece_num], g->tab[p])) move_isAllowed = false;
+			if (piece_num != p && intersect(g->pieces[piece_num], g->pieces[p])) move_isAllowed = false;
 		}
 	}
 	if (move_isAllowed) {
 		for(int p = 0; p < game_nb_pieces(g);++p) {
-			if (piece_num != p && intersect(g->tab[piece_num], g->tab[p])) printf("Erreur\n");
+			if (piece_num != p && intersect(g->pieces[piece_num], g->pieces[p])) printf("Erreur\n");
 		}
 		g->nb_mouv += distance;
 		delete_piece(tmp_piece);
 		return true;
 	}
 	// si le mouvement n'est pas valide on remets la piece a sa place initiale
-	copy_piece(tmp_piece, g->tab[piece_num]);
+	copy_piece(tmp_piece, g->pieces[piece_num]);
 	delete_piece(tmp_piece);
 	return false;
 }
@@ -78,7 +80,7 @@ bool play_move(game g, int piece_num, dir d, int distance){
 /*bool play_move(game g, int piece_num, dir d, int distance){
 
 	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
-	copy_piece(g->tab[piece_num],tmp_piece); //copie de la pièce en paramètre dans tmp_piece
+	copy_piece(g->pieces[piece_num],tmp_piece); //copie de la pièce en paramètre dans tmp_piece
 
 	switch(d){
 		case LEFT:
@@ -88,11 +90,11 @@ bool play_move(game g, int piece_num, dir d, int distance){
 				if(i==piece_num) continue; // Pour ne pas comparer la pièce à elle-même.
 
 				for(int j=1;j<=distance;j++){
-					move_piece(tmp_piece,LEFT,1); //On déplace tmp_piece de 1 vers la gauche*on peu optimiser je pense .
-					if(intersect(tmp_piece,g->tab[i])) return false; // Si la pièce (+ la distance) chevauche une autre pièce, retourner false.
+					move_piece(tmp_piece,LEFT,1); //On déplace tmp_piece de 1 vers la gauche.
+					if(intersect(tmp_piece,g->pieces[i])) return false; // Si la pièce (+ la distance) chevauche une autre pièce, retourner false.
 				}
 			}
-			move_piece(g->tab[piece_num],LEFT,distance);
+			move_piece(g->pieces[piece_num],LEFT,distance);
 			g->nb_mouv+=distance;
 			break;
 
@@ -103,10 +105,10 @@ bool play_move(game g, int piece_num, dir d, int distance){
 				
 				for(int j=0;j<distance;j++){
 				move_piece(tmp_piece,RIGHT,1);
-				if(intersect(tmp_piece,g->tab[i])) return false;
+				if(intersect(tmp_piece,g->pieces[i])) return false;
 				}
 			}
-			move_piece(g->tab[piece_num],RIGHT,distance);
+			move_piece(g->pieces[piece_num],RIGHT,distance);
 			g->nb_mouv+=distance;
 
 			break;
@@ -118,10 +120,10 @@ bool play_move(game g, int piece_num, dir d, int distance){
 				
 				for(int j=0;j<distance;j++){
 				move_piece(tmp_piece,UP,1);
-				if(intersect(tmp_piece,g->tab[i])) return false;
+				if(intersect(tmp_piece,g->pieces[i])) return false;
 				}
 			}
-			move_piece(g->tab[piece_num],UP,distance);
+			move_piece(g->pieces[piece_num],UP,distance);
 			g->nb_mouv+=distance;
 
 			break;
@@ -133,10 +135,10 @@ bool play_move(game g, int piece_num, dir d, int distance){
 				
 				for(int j=0;j<distance;j++){
 				move_piece(tmp_piece,DOWN,1);
-				if(intersect(tmp_piece,g->tab[i])) return false;
+				if(intersect(tmp_piece,g->pieces[i])) return false;
 				}
 			}
-			move_piece(g->tab[piece_num],DOWN,distance);
+			move_piece(g->pieces[piece_num],DOWN,distance);
 			g->nb_mouv+=distance;
 
 			break;

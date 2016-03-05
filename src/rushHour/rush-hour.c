@@ -4,8 +4,8 @@
 #include <string.h>
 #include <time.h>
 
-#include "piece.h"
-#include "game.h"
+#include <piece.h>
+#include <game.h>
 
 #define RANDOMIZE 80
 
@@ -271,6 +271,7 @@ int main(int argc, char* argv[]) {
 			for (int i = 0; i < nb_pieces; ++i) {
 				delete_piece(pieces[i]);
 			}
+			free(pieces);
 		}
 		//On genere aléatoirement le nombre de pieces
 		nb_pieces = rand_ab(7,14);
@@ -326,6 +327,7 @@ int main(int argc, char* argv[]) {
 					(*display)(currentGame, nb_pieces); // on affiche la partie terminé
 					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entrée pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
 					fgets(cmd, 20, stdin);
+					delete_game(currentGame);
 					goto newGame;
 				}
 			} else {
@@ -337,8 +339,13 @@ int main(int argc, char* argv[]) {
 			printf("usage : <numeros piece> <up/left/down/right> <distance>\nAttention certaines touches, commes les flèches, peuvent changer la commande envoyée\n");
 		} else if (streq(cmd,"r")) { //Si la commande est "r" on relance une partie
 			printf("\n\nNouvelle partie\n");
+			delete_game(currentGame);
 			goto newGame;
 		}
 	}
+	delete_game(currentGame);
+	for(int i=0;i<nb_pieces;i++)
+		delete_piece(pieces[i]);
+	free(pieces);
 	return EXIT_SUCCESS;
 }
