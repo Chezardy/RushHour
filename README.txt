@@ -11,3 +11,7 @@ Compilation Cmake:
 									- game.h et piece.h dans build/include/)
 		- $ make test
 		- $ make clean
+		
+Le projet fonctionne également sous windows, bien que cmake ne génère pas de makefile compatible.
+Vous pouvez le compiler avec MinGW par exemple avec la commande :
+	gcc -std=c99 -Wall -I./src/game/ -I./src/rushHour/ ./src/game/game.c ./src/game/piece.c ./src/rushHour/rush-hour.c ./src/rushHour/displayV1.c -o rushHourV1
