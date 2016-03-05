@@ -193,8 +193,6 @@ int main(int argc, char* argv[]) {
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
 		fgets(cmd, 20, stdin);
-		//
-		//printf("%c[2J", 0x1B); A revoir, pour rafraichir la console a chaque affichage
 		if (readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
 			/*Déroulement d'un tour du jeu*/
