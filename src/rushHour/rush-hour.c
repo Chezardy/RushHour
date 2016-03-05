@@ -14,7 +14,7 @@
 char *dir_c[] = {"up", "left", "down", "right"}; //Uniquement utile pour comparer avec l'input
 
 /*
-Retourne une nombre aléatoire en a et b (compris)
+Retourne un nombre aléatoire en a et b (compris)
 */
 int rand_ab(int a, int b) {
 	return (rand()%((b+1)-a)) + a;
