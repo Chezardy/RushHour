@@ -43,21 +43,21 @@ bool readCommand(char *cmd, int* target, int* direction, int* distance) {
 	char 	str[3][20]; // char** pour stocker les 3 aguments en string
 	int 	i = 0, j = 0, k = 0;
 
-	for (int i = 0; i < 3; i++) { 		// initialisation à '\0' sur tout les char
-		for (int j = 0; j < 10; j++) {	// |
-			str[i][j] = '\0';			// |
-		}								// |
-	}									// -
+	for (int i = 0; i < 3; i++) { // initialisation à '\0' sur tout les char
+		for (int j = 0; j < 10; j++) {
+			str[i][j] = '\0';
+		}
+	}
 	while (cmd[i] != '\0' && i < 20 && j < 3) { // parcours cmd et le stock dans str[j]. A chaque espace j++ donc nouvel argument
-		if (cmd[i] == ' ') {					// |
-			j++;								// |
-			k = -1;//car k incrémenté plus bas	// |
-		} else {								// |
-			str[j][k] = cmd[i];					// |
-		}										// |
-		k++;									// |
-		i++;									// |
-	}											// -
+		if (cmd[i] == ' ') {
+			j++;
+			k = -1;//car k incrémenté plus bas
+		} else {
+			str[j][k] = cmd[i];
+		}
+		k++;
+		i++;
+	}
 	if (j != 2) return false;// si il n'y a pas 2 espaces retourne faux
 	*target = atoi(str[0]);
 	*distance = atoi(str[2]);
