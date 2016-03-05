@@ -3,8 +3,8 @@
 #include <display.h>
 
 /*
-Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
-La grille affiché a une taille 2 fois supérieur à la grille de jeu.
+Fonction d'affichage en mode console, dessine une grille reprÃ©sentant le jeu en couleurs.
+La grille affichÃ© a une taille 2 fois supÃ©rieur Ã  la grille de jeu.
 */
 void GridDisplay(game g, int nb_pieces){
 	int 	y_scaled;
@@ -15,7 +15,7 @@ void GridDisplay(game g, int nb_pieces){
 
 	for (int i = 0; i < 14; ++i) nb_displayed[i] = false;
 	
-	// initialiser le tableau à -1
+	// initialiser le tableau Ã  -1
 	for(int x = 0; x < SIZE_GAME*2; ++x){
 		for(int y = 0; y < SIZE_GAME*2; ++y){
 			grid[y][x] = -1;
@@ -34,7 +34,7 @@ void GridDisplay(game g, int nb_pieces){
 			}
 		}
 	}
-	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
+	printf("%sNombre de mouvements jouÃ©%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
 	//affichage bord superieur
 	printf("%s############################%s\n", KWHT, KNRM);
 	for(int y = (SIZE_GAME*2)-1; y >= 0; --y){
@@ -52,7 +52,7 @@ void GridDisplay(game g, int nb_pieces){
 			else if (!nb_displayed[grid[y][x]]) {printf("%s%2d", color[grid[y][x]%9], grid[y][x]); nb_displayed[grid[y][x]] = true;}
 			else printf("%s  ", color[grid[y][x]%9]);
 		}
-		//Affichage bord droit (En vert pour la case d'arrivé)
+		//Affichage bord droit (En vert pour la case d'arrivÃ©)
 		if (y/2 == 3) printf("%s##%s", KGRN, KNRM);
 			else printf("%s##%s", KWHT, KNRM);
 		if (y == 7) printf("\tr : Relancer");
@@ -65,7 +65,7 @@ void GridDisplay(game g, int nb_pieces){
 }
 
 /*
-Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
+Affichage simplifiÃ©, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
 Fonctionnement similaire a DiplayGrid
 */
 void SimpleDisplay(game g, int nb_pieces){
@@ -97,8 +97,8 @@ void SimpleDisplay(game g, int nb_pieces){
 }
 
 /*
-Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
-Affiche les coordonnées et les infos de chaques pieces
+Fontion d'affichage tres simplifiÃ©, a priori uniquement utile pour le dÃ©buggage
+Affiche les coordonnÃ©es et les infos de chaques pieces
 */
 void TextDisplay(game currentGame, int nb_pieces) {
 	printf("Pieces :\n");
