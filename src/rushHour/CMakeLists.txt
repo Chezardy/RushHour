@@ -1,5 +1,5 @@
 #créé l'exécutable rush-hour
-add_executable(rush-hourV1 rush-hour.c)
+add_executable(rush-hourV1 rush-hour.c display.c)
 
 #spécifie la librairie nécessaire pour l'exécutable "rush-hour"
 target_link_libraries(rush-hourV1 game)
