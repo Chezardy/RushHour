@@ -1,6 +1,6 @@
 #include <piece.h>
 #include <game.h>
-#include <display.h>
+#include "displayV1.h"
 
 /*
 Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
