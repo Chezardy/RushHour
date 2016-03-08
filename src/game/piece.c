@@ -3,8 +3,13 @@
 struct piece_s {
 	int x;
 	int y;
-	bool is_horizontal;
-	bool small;
+	//bool is_horizontal;
+	//bool small;
+	int h;
+	int w;
+	bool move_h;
+	bool move_v;
+
 };
 
 piece new_piece_rh (int x, int y, bool small, bool horizontal) {
@@ -79,4 +84,34 @@ bool is_horizontal(cpiece p){
 }
 bool is_small(cpiece p){
 	return p->small;
+}
+//////////////////////////////////V2/////////////////////////////////////////////////////
+
+bool can_move_x(cpiece p){
+	return move_v;
+}
+bool can_move_y(cpiece p){
+	return move_h;
+}
+
+piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
+	piece output = malloc(sizeof(struct piece_s));
+	if (output == NULL) {
+		printf("Erreur allocation piece\n");
+		exit(0);
+	}
+	output->x = x;
+	output->y = y;
+	output->w =width ;
+	output->h = height
+	output->move_h = move_x;
+	output->move_v = move_y;
+	return output;
+}
+
+
+
+
+
+
 }

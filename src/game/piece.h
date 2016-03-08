@@ -1,8 +1,7 @@
-#ifndef _PIECE_H_
+ _PIECE_H_
 #define _PIECE_H_
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h> //The type bool is defined in this file
+
 
 /**
  * @file piece.h
@@ -35,7 +34,7 @@ typedef enum dir_e {UP, LEFT, DOWN, RIGHT} dir;
 
 /**
  * @brief Creates a new piece.
- * @param x,y coordinates of the lower-left corner (Remark: x-axe is oriented from bottom to top and y-axe is oriented from left to right).
+ * @param x,y coordinates of the lower-left corner (Remark: x-axe is oriented from left to right and y-axe is oriented from bottom to top).
  * @param small indicates if the vehicle is of size 2 (small=true) or 3 (small=false)
  * @param horizontal indicates whether the vehicle can move horizontally or vertically
  * @return a pointer toward the generated piece
@@ -92,12 +91,23 @@ int get_height(cpiece p);
 int get_width(cpiece p);
 
 /**
- * @brief Returns true if the piece is horizontal.
+ * @brief Returns true if the piece is
  */
 bool is_horizontal(cpiece p);
 
+/////////////////// VERSION 2 /////////////////////////////
+
+bool can_move_x(cpiece p);
+bool can_move_y(cpiece p);
 /**
- * @brief Returns true if the piece is small
+ * @brief Initialized piece structure
+ * @param x,y: coordinates of the bottom left corner of the piece
+ * @param move_x: indicates if the piece is allowed to move horizontally
+ * @param move_y: indicates if the piece is allowed to move vertically
+ * @return created piece at a given position
  */
-bool is_small(cpiece p);
+piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y);
+
+
+
 #endif
