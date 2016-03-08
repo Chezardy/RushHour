@@ -7,6 +7,8 @@ struct game_s {
 	piece *pieces;
 	int nb_mouv;
 	int nb_pieces;
+	int h;
+	int w;
 };
 
 game new_game_hr (int nb_pieces, piece *pieces){
@@ -155,7 +157,23 @@ void set_nb_moves(game g, int nb){
 	g->nb_mouv = nb;
 }
 
-
+game new_game (int width, int height, int nb_pieces, piece *pieces){
+	game g = malloc(sizeof(struct game_s));
+	g->pieces = malloc(nb_pieces*sizeof(struct piece_s*));
+	for(int i=0;i<nb_pieces;i++)
+		g->pieces[i] = pieces[i];
+	g->nb_mouv = 0;
+	g->nb_pieces = nb_pieces;
+	g-> = width;
+	g-> = height;
+	return g;
+}
+int game_width(cgame g){
+	return g->w;
+}
+int int game_height(cgame g){
+	return g->h;
+}
 
 
 
