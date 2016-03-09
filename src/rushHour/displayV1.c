@@ -6,18 +6,21 @@
 Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
 La grille affiché a une taille 2 fois supérieur à la grille de jeu.
 */
-void GridDisplay(game g, int nb_pieces){
+void GridDisplay(game g){
 	int 	y_scaled;
 	int 	x_scaled;
-	int 	grid[SIZE_GAME*2][SIZE_GAME*2];
+	int		size_x = game_width(g);
+	int		size_y = game_height(g);
+	int		nb_pieces = game_nb_pieces(g);
+	int 	grid[size_y*2][size_x*2];
 	bool 	nb_displayed[14]; // Utile pour n'afficher le numeros d'une piece qu'une seule fois
 	char* 	color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2}; //tableau des couleurs disponibles pour les pieces
 
 	for (int i = 0; i < 14; ++i) nb_displayed[i] = false;
 	
 	// initialiser le tableau à -1
-	for(int x = 0; x < SIZE_GAME*2; ++x){
-		for(int y = 0; y < SIZE_GAME*2; ++y){
+	for(int x = 0; x < size_x*2; ++x){
+		for(int y = 0; y < size_y*2; ++y){
 			grid[y][x] = -1;
 		}
 	}
@@ -37,11 +40,11 @@ void GridDisplay(game g, int nb_pieces){
 	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
 	//affichage bord superieur
 	printf("%s############################%s\n", KWHT, KNRM);
-	for(int y = (SIZE_GAME*2)-1; y >= 0; --y){
+	for(int y = (size_y*2)-1; y >= 0; --y){
 		//affichage bord gauche
 		printf("%s##%s",KWHT, KNRM);
 		//Puis pour chaques cases en largeur
-		for(int x = 0; x < (SIZE_GAME*2); ++x){
+		for(int x = 0; x < (size_x*2); ++x){
 			//Si c'est une case vide, affichage en noir
 			if (grid[y][x] == - 1) printf("%s  ", KNRM);
 			//Si c'est la piece 0, affichage en rouge, et si c'est la 1ere case de la piece on affiche son numeros
@@ -68,10 +71,13 @@ void GridDisplay(game g, int nb_pieces){
 Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
 Fonctionnement similaire a DiplayGrid
 */
-void SimpleDisplay(game g, int nb_pieces){
-	int grid[SIZE_GAME][SIZE_GAME];
-	for(int x = 0; x < SIZE_GAME; ++x){
-		for(int y = 0; y < SIZE_GAME; ++y){
+void SimpleDisplay(game g){
+	int		size_x = game_width(g);
+	int		size_y = game_height(g);
+	int		nb_pieces = game_nb_pieces(g);
+	int grid[size_y][size_x];
+	for(int x = 0; x < size_x; ++x){
+		for(int y = 0; y < size_y; ++y){
 			grid[y][x] = -1;
 		}
 	}
@@ -84,9 +90,9 @@ void SimpleDisplay(game g, int nb_pieces){
 	}
 	printf("\n");
 	printf("###############\n");
-	for(int y = SIZE_GAME-1; y >= 0; --y){
+	for(int y = size_y-1; y >= 0; --y){
 		printf("%s#", KNRM);
-		for(int x = 0; x < SIZE_GAME; ++x){
+		for(int x = 0; x < size_x; ++x){
 			if (grid[y][x] == -1) printf(" -");
 			else printf("%2d", grid[y][x]);
 		}
@@ -100,10 +106,11 @@ void SimpleDisplay(game g, int nb_pieces){
 Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
 Affiche les coordonnées et les infos de chaques pieces
 */
-void TextDisplay(game currentGame, int nb_pieces) {
+void TextDisplay(game g) {
+	int		nb_pieces = game_nb_pieces(g);
 	printf("Pieces :\n");
 	for (int i = 0; i < nb_pieces; ++i) {
-		printf("piece %d : x:%d y:%d small:%d hori:%d\n",i ,get_x(game_piece(currentGame, i)), get_y(game_piece(currentGame, i)), 
-			is_small(game_piece(currentGame, i)), is_horizontal(game_piece(currentGame, i)));
+		printf("piece %d : x:%d y:%d small:%d hori:%d\n",i ,get_x(game_piece(g, i)), get_y(game_piece(g, i)), 
+			is_small(game_piece(g, i)), is_horizontal(game_piece(g, i)));
 	}
 }

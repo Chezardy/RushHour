@@ -5,13 +5,12 @@ struct piece_s {
 	int y;
 	//bool is_horizontal;
 	//bool small;
-	int h;
 	int w;
-	bool move_h;
+	int h;
 	bool move_v;
-
+	bool move_h;
 };
-
+//position, its shape and its ability to move vertically or horizontally
 piece new_piece_rh (int x, int y, bool small, bool horizontal) {
 	piece output = malloc(sizeof(struct piece_s));
 	if (output == NULL) {
@@ -20,8 +19,21 @@ piece new_piece_rh (int x, int y, bool small, bool horizontal) {
 	}
 	output->x = x;
 	output->y = y;
-	output->is_horizontal = horizontal;
-	output->small = small;
+	
+	if (horizontal) {
+		output->h = 1;
+		output->move_v = false;
+		output->move_h = true;
+		if(small) output->w = 2;
+		else output->w = 3;
+	} else {
+		output->move_v = true;
+		output->move_h = false;
+		output->w = 1;
+		if(small) output->h = 2;
+		else output->h = 3;
+	}
+
 	return output;
 }
 
@@ -32,15 +44,17 @@ void delete_piece (piece p) {
 void copy_piece (cpiece src, piece dst){
 	dst->x = src->x;
 	dst->y = src->y;
-	dst->is_horizontal = src->is_horizontal;
-	dst->small = src->small;
+	dst->h = src->h;
+	dst->w = src->w;
+	dst->move_v = src->move_v;
+	dst->move_h = src->move_h;
 }
 
 void move_piece (piece p, dir d, int distance){
-	if (!p->is_horizontal) { // si la piece est autorisé à bouger verticalement
+	if (p->move_v) { // si la piece est autorisé à bouger verticalement
 		if (d == UP) p->y += distance;
 		else if (d == DOWN) p->y -= distance;
-	} else { // si elle est autorisé à bouger horizontalement
+	} else if (p->move_h) { // si elle est autorisé à bouger horizontalement
 		if (d == LEFT) p->x -= distance;
 		if (d == RIGHT) p->x += distance;
 	}
@@ -68,32 +82,34 @@ int get_y(cpiece p){
 }
 
 int get_height(cpiece p){
-	if (p->is_horizontal) return 1;
-	if (p->small) return 2;
-	return 3;
+	return p->h;
 }
 
 int get_width(cpiece p){
-	if (!p->is_horizontal) return 1;
-	if (p->small) return 2;
-	return 3;
+	return p->w;
 }
 
 bool is_horizontal(cpiece p){
-	return p->is_horizontal;
+	return (p->move_h);
 }
-bool is_small(cpiece p){
-	return p->small;
-}
-//////////////////////////////////V2/////////////////////////////////////////////////////
 
-bool can_move_x(cpiece p){
-	return move_v;
+bool is_small(cpiece p){
+	return (p->w < 3 && p->h < 3);
+}
+
+bool can_move_x(cpiece p) {
+	return p->move_v;
 }
 bool can_move_y(cpiece p){
-	return move_h;
+	return p->move_h;
 }
-
+/**
+ * @brief Initialized piece structure
+ * @param x,y: coordinates of the bottom left corner of the piece
+ * @param move_x: indicates if the piece is allowed to move horizontally
+ * @param move_y: indicates if the piece is allowed to move vertically
+ * @return created piece at a given position
+ */
 piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
 	piece output = malloc(sizeof(struct piece_s));
 	if (output == NULL) {
@@ -102,16 +118,11 @@ piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
 	}
 	output->x = x;
 	output->y = y;
-	output->w =width ;
-	output->h = height
+	output->w = width;
+	output->h = height;
 	output->move_h = move_x;
 	output->move_v = move_y;
+	
 	return output;
 }
 
-
-
-
-
-
-}

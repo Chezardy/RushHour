@@ -1,24 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "game.h"
-#include <assert.h>
 
 struct game_s {
 	piece *pieces;
 	int nb_mouv;
 	int nb_pieces;
-	int h;
 	int w;
+	int h;
 };
 
 game new_game_hr (int nb_pieces, piece *pieces){
-	game g = malloc(SIZE_GAME*sizeof(struct game_s));
-	g->pieces = malloc(nb_pieces*sizeof(struct piece_s*));
-	for(int i=0;i<nb_pieces;i++)
-		g->pieces[i] = pieces[i];
-	g->nb_mouv = 0;
-	g->nb_pieces = nb_pieces;
-	return g;
+	game g = malloc(sizeof(struct game_s));
+	if (g != NULL) {
+		g->pieces = malloc(nb_pieces*sizeof(piece));
+		if (g->pieces != NULL) {
+			for(int i=0;i<nb_pieces;i++)
+				g->pieces[i] = pieces[i];
+			g->nb_mouv = 0;
+			g->nb_pieces = nb_pieces;
+			g->w = 6;
+			g->h = 6;
+			return g;
+		} else {
+			exit(-1);
+		}
+	} else {
+		exit(-1);
+	}
 }
 
 void delete_game (game g){
@@ -29,13 +38,11 @@ void delete_game (game g){
 }
 
 void copy_game (cgame src, game dst){
-	int nSrc = sizeof(src->pieces)/sizeof(piece);
-	int nDst = sizeof(dst->pieces)/sizeof(piece);
-	assert(nSrc != nDst);
-
-	for(int i=0;i<nDst;i++)
-		dst->pieces[i] = src->pieces[i]; 
+	for(int i=0;i < src->nb_pieces;i++) copy_piece(src->pieces[i],dst->pieces[i]); 
 	dst->nb_mouv = src->nb_mouv;
+	dst->nb_pieces = src->nb_pieces;
+	dst->w = src->w;
+	dst->h = src->h;
 }
 
 int game_nb_pieces(cgame g){
@@ -43,6 +50,10 @@ int game_nb_pieces(cgame g){
 }
 
 cpiece game_piece(cgame g, int piece_num){
+	
+	int a = g->nb_pieces;
+	a = a*1;
+	if(a < piece_num) exit(-1);
 	return g->pieces[piece_num];
 }
 
@@ -79,76 +90,6 @@ bool play_move(game g, int piece_num, dir d, int distance){
 	return false;
 }
 
-/*bool play_move(game g, int piece_num, dir d, int distance){
-
-	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
-	copy_piece(g->pieces[piece_num],tmp_piece); //copie de la pièce en paramètre dans tmp_piece
-
-	switch(d){
-		case LEFT:
-			if(get_x(tmp_piece)-distance < 0 || !is_horizontal(tmp_piece)) return false; // Si la pièce (+ la distance) déborde du jeu sur la gauche OU que la pièce est verticale, retourner false.
-
-			for(int i=0;i<game_nb_pieces(g);i++){
-				if(i==piece_num) continue; // Pour ne pas comparer la pièce à elle-même.
-
-				for(int j=1;j<=distance;j++){
-					move_piece(tmp_piece,LEFT,1); //On déplace tmp_piece de 1 vers la gauche.
-					if(intersect(tmp_piece,g->pieces[i])) return false; // Si la pièce (+ la distance) chevauche une autre pièce, retourner false.
-				}
-			}
-			move_piece(g->pieces[piece_num],LEFT,distance);
-			g->nb_mouv+=distance;
-			break;
-
-		case RIGHT:
-			if(get_x(tmp_piece)+distance+get_width(tmp_piece) >= SIZE_GAME || !is_horizontal(tmp_piece)) return false;
-			for (int i=0;i<game_nb_pieces(g);i++){
-				if(i==piece_num) continue;
-				
-				for(int j=0;j<distance;j++){
-				move_piece(tmp_piece,RIGHT,1);
-				if(intersect(tmp_piece,g->pieces[i])) return false;
-				}
-			}
-			move_piece(g->pieces[piece_num],RIGHT,distance);
-			g->nb_mouv+=distance;
-
-			break;
-
-		case UP:
-			if(get_y(tmp_piece)+distance+get_height(tmp_piece) >= SIZE_GAME || is_horizontal(tmp_piece)) return false;
-			for (int i=0;i<game_nb_pieces(g);i++){
-				if(i==piece_num) continue;
-				
-				for(int j=0;j<distance;j++){
-				move_piece(tmp_piece,UP,1);
-				if(intersect(tmp_piece,g->pieces[i])) return false;
-				}
-			}
-			move_piece(g->pieces[piece_num],UP,distance);
-			g->nb_mouv+=distance;
-
-			break;
-
-		case DOWN:
-			if(get_y(tmp_piece)-distance < 0 || is_horizontal(tmp_piece)) return false;
-			for (int i=0;i<game_nb_pieces(g);i++){
-				if(i==piece_num) continue;
-				
-				for(int j=0;j<distance;j++){
-				move_piece(tmp_piece,DOWN,1);
-				if(intersect(tmp_piece,g->pieces[i])) return false;
-				}
-			}
-			move_piece(g->pieces[piece_num],DOWN,distance);
-			g->nb_mouv+=distance;
-
-			break;
-	}
-	delete_piece(tmp_piece); // Supression de la pièce temporaire (free)
-	return true; //
-}*/
-
 int game_nb_moves(cgame g){
 	return g->nb_mouv;
 }
@@ -164,16 +105,44 @@ game new_game (int width, int height, int nb_pieces, piece *pieces){
 		g->pieces[i] = pieces[i];
 	g->nb_mouv = 0;
 	g->nb_pieces = nb_pieces;
-	g-> = width;
-	g-> = height;
+	g->w = width;
+	g->h = height;
 	return g;
 }
+
+
+/**
+ *@brief return the width of the grid
+ */
 int game_width(cgame g){
 	return g->w;
 }
-int int game_height(cgame g){
+
+/**
+ *@brief return the height of the grid
+ */
+int game_height(cgame g){
 	return g->h;
 }
+
+/**
+ * @brief return the number of then piece located on this square (-1 if no piece is present)
+ * @param game
+ * @param x-coor of the square
+ * @param y-coor of the square
+ */
+int game_square_piece (game g, int x, int y){
+	for (int p = 0; p < game_nb_pieces(g); ++p) {
+		for(int i = 0; i < get_height(g->pieces[p]); ++i) {
+			for(int j = 0; j < get_width(g->pieces[p]); ++j) { 
+				if (get_x(g->pieces[p])+i == x && get_y(g->pieces[p])+j == y) return p;
+			}
+		}
+	}
+	return -1;
+}
+
+
 
 
 

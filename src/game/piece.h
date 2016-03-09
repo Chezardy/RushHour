@@ -1,6 +1,8 @@
- _PIECE_H_
+#ifndef _PIECE_H_
 #define _PIECE_H_
-#include <stdbool.h> //The type bool is defined in this file
+#include <stdlib.h> 
+#include <stdio.h> 
+#include <stdbool.h> 
 
 
 /**
@@ -94,6 +96,8 @@ int get_width(cpiece p);
  * @brief Returns true if the piece is
  */
 bool is_horizontal(cpiece p);
+
+bool is_small(cpiece p);
 
 /////////////////// VERSION 2 /////////////////////////////
 

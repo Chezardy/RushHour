@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include "piece.h"
 
+
+#define SIZE_GAME 6
+
 /**
  * @file game.h
  *
@@ -116,4 +119,7 @@ int game_height(cgame g);
  * @param y-coor of the square
  */
 int game_square_piece (game g, int x, int y);
+
+void set_nb_moves(game g, int nb);
+
 #endif
