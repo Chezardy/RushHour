@@ -70,8 +70,8 @@ bool play_move(game g, int piece_num, dir d, int distance){
 	
 	for (int i = 0; i < distance; i++) { // On decompose le mouvement en déplacement de une case
 		move_piece(g->pieces[piece_num], d, 1);
-		if ((get_x(g->pieces[piece_num])+get_width(g->pieces[piece_num])-1 >= SIZE_GAME || get_x(g->pieces[piece_num]) < 0)
-				|| (get_y(g->pieces[piece_num])+get_height(g->pieces[piece_num])-1 >= SIZE_GAME || get_y(g->pieces[piece_num]) < 0)) move_isAllowed = false;
+		if ((get_x(g->pieces[piece_num])+get_width(g->pieces[piece_num])-1 >= game_width(g) || get_x(g->pieces[piece_num]) < 0)
+				|| (get_y(g->pieces[piece_num])+get_height(g->pieces[piece_num])-1 >= game_height(g) || get_y(g->pieces[piece_num]) < 0)) move_isAllowed = false;
 		for(int p = 0; p < game_nb_pieces(g);++p) { // On verifie si le mouvement est valide (intersect+depassement grille)
 			if (piece_num != p && intersect(g->pieces[piece_num], g->pieces[p])) move_isAllowed = false;
 		}

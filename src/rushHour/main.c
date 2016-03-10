@@ -8,6 +8,7 @@
 #include <game.h>
 #include <displayV1.h>
 #include <rush-hour.h>
+#include "anerouge.h"
 #include <utils.h>
 
 int main(int argc, char* argv[]) {
@@ -17,23 +18,28 @@ int main(int argc, char* argv[]) {
 	int 	cmd_distance;
 	game	currentGame;
 	void	(*display)(game);
-
-	if (argc > 1 && streq(argv[1],"-nocolor")) {
-		printf("#Affichage simplifié sans couleur\n");
-		display = &SimpleDisplay;
-	} else if (argc > 1 && streq(argv[1],"-text")) {
-		printf("#Affichage minimaliste\n");
-		display = &TextDisplay;
-	} else {
-		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
-		display = &GridDisplay;
-	} 
+	game	(*getGame)();
+	
+	printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
+	display = &GridDisplay;
+	getGame = &RH_getGame;
+	for (int i = 1; i < argc;i++) {
+		if (streq(argv[i],"-nocolor")) {
+			printf("#Affichage simplifié sans couleur\n");
+			display = &SimpleDisplay;
+		} else if (streq(argv[i],"-text")) {
+			printf("#Affichage minimaliste\n");
+			display = &TextDisplay;
+		} else if (streq(argv[i],"-anerouge")){
+			getGame = &AR_getGame;
+		}
+	}
 	
 	srand((unsigned)time(NULL));
 	
 	newGame: // Point de retour pour recommencer une partie
 	
-	currentGame = RH_getGame();
+	currentGame = (getGame)();
 	
 	// Debut du jeu
 	while (!streq(cmd,"q")) { // tant qu'on n'entre pas "exit", boucle le programme
