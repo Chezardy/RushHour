@@ -10,6 +10,7 @@
 #include <rush-hour.h>
 #include "anerouge.h"
 #include <utils.h>
+#include <solveur.h>
 
 int main(int argc, char* argv[]) {
 	char 	cmd[20]; // contiendra l'input de l'utilisateur
@@ -19,10 +20,12 @@ int main(int argc, char* argv[]) {
 	game	currentGame;
 	void	(*display)(game);
 	game	(*getGame)();
+	bool	use_solveur;
 	
+	use_solveur = false;
 	printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
-	display = &GridDisplay;
-	getGame = &RH_getGame;
+	display = NULL;
+	getGame = NULL;
 	for (int i = 1; i < argc;i++) {
 		if (streq(argv[i],"-nocolor")) {
 			printf("#Affichage simplifié sans couleur\n");
@@ -31,8 +34,20 @@ int main(int argc, char* argv[]) {
 			printf("#Affichage minimaliste\n");
 			display = &TextDisplay;
 		} else if (streq(argv[i],"-anerouge")){
+			printf("Lancement du jeu de l\'Ane rouge\n");
 			getGame = &AR_getGame;
+		} else if (streq(argv[i],"-solveur")){
+			printf("Utilisation du solveur\n");
+			use_solveur = true;
 		}
+	}
+	if (display == NULL) {
+		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
+		display = &GridDisplay;
+	}
+	if (getGame == NULL) {
+		printf("Lancement du jeu Rush-Hour\n");
+		getGame = &RH_getGame;
 	}
 	
 	srand((unsigned)time(NULL));
@@ -48,9 +63,10 @@ int main(int argc, char* argv[]) {
 		// attente de la demande de l'utilisateur
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
-		fgets(cmd, 20, stdin);
+		if (!use_solveur) fgets(cmd, 20, stdin);
 		//cmd[0] = 'r';
-		if (readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
+		
+		if ((use_solveur && solveur(currentGame, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
