@@ -3,8 +3,8 @@
 struct piece_s {
 	int x;
 	int y;
-	//bool is_horizontal;
-	//bool small;
+	///bool is_horizontal;
+	///bool small;
 	int w;
 	int h;
 	bool move_v;
@@ -119,9 +119,9 @@ piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
 	output->x = x;
 	output->y = y;
 	output->w = width;
-	output->h = height;
-	output->move_h = move_x;
-	output->move_v = move_y;
+	output->h = height;//
+	output->move_h = move_x;//
+	output->move_v = move_y;//
 	
 	return output;
 }
