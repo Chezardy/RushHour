@@ -142,6 +142,8 @@ int game_square_piece (game g, int x, int y){
 	return -1;
 }
 
+/*******/
+
 
 
 
