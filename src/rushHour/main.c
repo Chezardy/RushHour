@@ -6,11 +6,11 @@
 
 #include <piece.h>
 #include <game.h>
-#include <displayV1.h>
-#include <rush-hour.h>
+#include "displayV1.h"
+#include "rush-hour.h"
 #include "anerouge.h"
-#include <utils.h>
-#include <solveur.h>
+#include "utils.h"
+#include "strategies.h"
 
 int main(int argc, char* argv[]) {
 	char 	cmd[20]; // contiendra l'input de l'utilisateur
@@ -29,10 +29,10 @@ int main(int argc, char* argv[]) {
 	for (int i = 1; i < argc;i++) {
 		if (streq(argv[i],"-nocolor")) {
 			printf("#Affichage simplifié sans couleur\n");
-			display = &SimpleDisplay;
+			display = &simpleDisplay;
 		} else if (streq(argv[i],"-text")) {
 			printf("#Affichage minimaliste\n");
-			display = &TextDisplay;
+			display = &textDisplay;
 		} else if (streq(argv[i],"-anerouge")){
 			printf("Lancement du jeu de l\'Ane rouge\n");
 			getGame = &AR_getGame;
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	}
 	if (display == NULL) {
 		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
-		display = &GridDisplay;
+		display = &gridDisplay;
 	}
 	if (getGame == NULL) {
 		printf("Lancement du jeu Rush-Hour\n");
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
 		if (!use_solveur) fgets(cmd, 20, stdin);
 		//cmd[0] = 'r';
 		
-		if ((use_solveur && solveur(currentGame, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
+		if ((use_solveur && brutStrategy(currentGame, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	

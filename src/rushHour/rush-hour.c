@@ -1,7 +1,6 @@
 #include <piece.h>
 #include <game.h>
 #include "utils.h"
-#include "displayV1.h"
 
 #define RANDOMIZE 80
 

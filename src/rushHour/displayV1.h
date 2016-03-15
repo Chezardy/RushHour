@@ -22,16 +22,16 @@
 Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
 La grille affiché a une taille 2 fois supérieur à la grille de jeu.
 */
-void GridDisplay(game g);
+void gridDisplay(game g);
 
 /*
 Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
 Fonctionnement similaire a DiplayGrid
 */
-void SimpleDisplay(game g);
+void simpleDisplay(game g);
 
 /*
 Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
 Affiche les coordonnées et les infos de chaques pieces
 */
-void TextDisplay(game g);
+void textDisplay(game g);
