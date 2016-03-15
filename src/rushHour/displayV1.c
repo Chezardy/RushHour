@@ -39,7 +39,8 @@ void gridDisplay(game g){
 	}
 	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
 	//affichage bord superieur
-	printf("%s############################%s\n", KWHT, KNRM);
+	for(int i=0;i<game_width(g)+1;i++)printf("%s####%s", KWHT, KNRM);
+	printf("\n");
 	for(int y = (size_y*2)-1; y >= 0; --y){
 		//affichage bord gauche
 		printf("%s##%s",KWHT, KNRM);
@@ -64,7 +65,8 @@ void gridDisplay(game g){
 		printf("\n");
 	}
 	//affichage bord inferieur
-	printf("%s############################%s\n", KWHT, KNRM);
+	for(int i=0;i<game_width(g)+1;i++)printf("%s####%s", KWHT, KNRM);
+	printf("\n");
 }
 
 /*
@@ -88,8 +90,9 @@ void simpleDisplay(game g){
 			}
 		}
 	}
-	printf("\n");
+	//printf("\n");
 	printf("###############\n");
+	printf("\n");
 	for(int y = size_y-1; y >= 0; --y){
 		printf("%s#", KNRM);
 		for(int x = 0; x < size_x; ++x){
@@ -100,6 +103,7 @@ void simpleDisplay(game g){
 		else printf(" #\n");
 	}
 	printf("###############\n");
+	printf("\n");
 }
 
 /*
