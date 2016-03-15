@@ -62,10 +62,10 @@ bool game_over_hr(cgame g){
 }
 
 bool play_move(game g, int piece_num, dir d, int distance){
-	if ((is_horizontal(g->pieces[piece_num]) && (d == 0 || d == 2))
-			|| ((!is_horizontal(g->pieces[piece_num])) && (d == 1 || d == 3))) return false;
+	if ((!can_move_y(g->pieces[piece_num]) && (d == 0 || d == 2))
+			|| ((!can_move_x(g->pieces[piece_num])) && (d == 1 || d == 3))) return false;
 	bool move_isAllowed = true;
-	piece tmp_piece = new_piece_rh(0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
+	piece tmp_piece = new_piece(0,0,0,0,true,true); // Initialisation d'une pièce temporaire (mallocs)
 	copy_piece(g->pieces[piece_num],tmp_piece); 
 	
 	for (int i = 0; i < distance; i++) { // On decompose le mouvement en déplacement de une case

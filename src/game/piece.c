@@ -54,7 +54,8 @@ void move_piece (piece p, dir d, int distance){
 	if (p->move_v) { // si la piece est autorisé à bouger verticalement
 		if (d == UP) p->y += distance;
 		else if (d == DOWN) p->y -= distance;
-	} else if (p->move_h) { // si elle est autorisé à bouger horizontalement
+	}
+	if (p->move_h) { // si elle est autorisé à bouger horizontalement
 		if (d == LEFT) p->x -= distance;
 		if (d == RIGHT) p->x += distance;
 	}
