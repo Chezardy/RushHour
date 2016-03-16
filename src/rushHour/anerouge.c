@@ -25,6 +25,9 @@ game AR_getGame() {
 	
 	currentGame = new_game(4,5,10, pieces);
 	
+	for (i=0;i<10;++i) delete_piece(pieces[i]);
+	free(pieces);
+	
 	return currentGame;
 }
 
