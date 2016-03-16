@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 	}
 	
 	if (getGame == NULL) {
-		printf("Liste des arguments possibles :\n-anerouge : Ane rouge\n-rushhour : Rush-Hour");
+		printf("Liste des arguments possibles :\n-anerouge : Ane rouge\n-rushhour : Rush-Hour\n");
 		exit(0);
 	}
 	
