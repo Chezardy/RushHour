@@ -65,7 +65,13 @@ void gridDisplay(game g){
 		printf("\n");
 	}
 	//affichage bord inferieur
-	for(int i=0;i<game_width(g)+1;i++)printf("%s####%s", KWHT, KNRM);
+	for(int i=0;i<game_width(g)+1;i++){
+		if(i==3|| i==2){
+		printf("%s####%s", KGRN, KNRM);
+		}else{
+		printf("%s####%s", KWHT, KNRM);
+		}
+	}	
 	printf("\n");
 }
 
