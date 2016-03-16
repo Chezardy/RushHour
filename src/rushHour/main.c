@@ -21,6 +21,8 @@ int main(int argc, char* argv[]) {
 	void	(*display)(game);
 	game	(*getGame)();
 	bool	use_solveur;
+
+	for (int j = 0; j < 20; j++) cmd[j] = '\0';
 	
 	use_solveur = false;
 	printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
