@@ -22,8 +22,7 @@ Compilation Cmake:
 		- $ make test
 		- $ make clean
 		
-/*
+
 Le projet fonctionne également sous windows, bien que cmake ne génère pas de makefile compatible.
 Vous pouvez le compiler avec MinGW par exemple avec la commande :
-	gcc -std=c99 -Wall -I./src/game/ -I./src/rushHour/ ./src/game/game.c ./src/game/piece.c ./src/rushHour/rush-hour.c ./src/rushHour/displayV1.c -o rushHourV1
-*/
+	gcc -std=c99 -Wall -I./src/libgame/ -I./src/games/ ./src/libgame/game.c ./src/libgame/piece.c ./src/games/rush-hour.c ./src/games/displayV1.c ./src/games/strategies.c ./src/games/utils.c ./src/games/main.c ./src/games/anerouge.c -o jeux
