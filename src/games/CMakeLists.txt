@@ -8,6 +8,6 @@ target_link_libraries(jeux game)
 link_directories(${RUSH_HOUR_BINARY_DIR}/src/game)
 
 #lors de "make install" l'exécutable rush-hourV1 est copié dans le dossier bin
-install(FILES ${RUSH_HOUR_BINARY_DIR}/src/rushHour/jeux DESTINATION ${RUSH_HOUR_BINARY_DIR}/bin
+install(FILES ${RUSH_HOUR_BINARY_DIR}/src/games/jeux DESTINATION ${RUSH_HOUR_BINARY_DIR}/bin
 		PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_WRITE WORLD_EXECUTE)
 
