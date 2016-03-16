@@ -7,8 +7,8 @@ struct piece_s {
 	///bool small;
 	int w;
 	int h;
-	bool move_v;
-	bool move_h;
+	bool move_x;
+	bool move_y;
 };
 //position, its shape and its ability to move vertically or horizontally
 piece new_piece_rh (int x, int y, bool small, bool horizontal) {
@@ -22,14 +22,14 @@ piece new_piece_rh (int x, int y, bool small, bool horizontal) {
 	
 	if (horizontal) {
 		output->h = 1;
-		output->move_v = false;
-		output->move_h = true;
+		output->move_x = true;
+		output->move_y = false;
 		if(small) output->w = 2;
 		else output->w = 3;
 	} else {
-		output->move_v = true;
-		output->move_h = false;
 		output->w = 1;
+		output->move_x = false;
+		output->move_y = true;
 		if(small) output->h = 2;
 		else output->h = 3;
 	}
@@ -46,16 +46,16 @@ void copy_piece (cpiece src, piece dst){
 	dst->y = src->y;
 	dst->h = src->h;
 	dst->w = src->w;
-	dst->move_v = src->move_v;
-	dst->move_h = src->move_h;
+	dst->move_x = src->move_x;
+	dst->move_y = src->move_y;
 }
 
 void move_piece (piece p, dir d, int distance){
-	if (p->move_v) { // si la piece est autorisé à bouger verticalement
+	if (p->move_y) { // si la piece est autorisé à bouger verticalement
 		if (d == UP) p->y += distance;
 		else if (d == DOWN) p->y -= distance;
 	}
-	if (p->move_h) { // si elle est autorisé à bouger horizontalement
+	if (p->move_x) { // si elle est autorisé à bouger horizontalement
 		if (d == LEFT) p->x -= distance;
 		if (d == RIGHT) p->x += distance;
 	}
@@ -91,7 +91,7 @@ int get_width(cpiece p){
 }
 
 bool is_horizontal(cpiece p){
-	return (p->move_h);
+	return (p->move_y);
 }
 
 bool is_small(cpiece p){
@@ -99,10 +99,10 @@ bool is_small(cpiece p){
 }
 
 bool can_move_x(cpiece p) {
-	return p->move_v;
+	return p->move_x;
 }
 bool can_move_y(cpiece p){
-	return p->move_h;
+	return p->move_y;
 }
 /**
  * @brief Initialized piece structure
@@ -121,8 +121,8 @@ piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
 	output->y = y;
 	output->w = width;
 	output->h = height;//
-	output->move_h = move_x;//
-	output->move_v = move_y;//
+	output->move_x = move_x;//
+	output->move_y = move_y;//
 	
 	return output;
 }

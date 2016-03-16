@@ -101,7 +101,7 @@ void set_nb_moves(game g, int nb){
 game new_game (int width, int height, int nb_pieces, piece *pieces){
 	game g = malloc(sizeof(struct game_s));
 	g->pieces = malloc(nb_pieces*sizeof(struct piece_s*));
-	
+
 	for(int i=0;i<nb_pieces;i++)
 		g->pieces[i]= new_piece(get_x(pieces[i]),get_y(pieces[i]),get_width(pieces[i]),get_height(pieces[i]),can_move_x(pieces[i]), can_move_y(pieces[i]));
 
