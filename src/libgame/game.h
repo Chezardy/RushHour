@@ -72,7 +72,7 @@ cpiece game_piece(cgame g, int piece_num);
  * @brief Test is the game is over (i.e. if the piece 0 has reached the exit).
  * @return true if the piece number 0 has coordinates (4,3)
 */
-bool game_over_hr(cgame g);
+//bool game_over_hr(cgame g);
 
 
 /**

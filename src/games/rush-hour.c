@@ -101,3 +101,7 @@ game RH_getGame() {
 	
 	return currentGame;
 }
+
+bool game_over_hr(cgame g){
+	return get_x(game_piece(g,0))==4 && get_y(game_piece(g,0))==3;
+}

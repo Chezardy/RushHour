@@ -31,3 +31,6 @@ game AR_getGame() {
 	return currentGame;
 }
 
+bool game_over_ar(cgame g){
+	return get_x(game_piece(g,0))==1 && get_y(game_piece(g,0))==0;
+}

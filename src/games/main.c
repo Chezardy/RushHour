@@ -12,6 +12,8 @@
 #include "utils.h"
 #include "strategies.h"
 
+int rules = -1; // determine le type du jeu en cours pour des fonctions qui en dépendents (comme display)
+
 int main(int argc, char* argv[]) {
 	char 	cmd[20]; // contiendra l'input de l'utilisateur
 	int 	cmd_target;
@@ -20,6 +22,7 @@ int main(int argc, char* argv[]) {
 	game	currentGame;
 	void	(*display)(game);
 	game	(*getGame)();
+	bool	(*game_over)(cgame);
 	bool	use_solveur;
 
 	for (int j = 0; j < 20; j++) cmd[j] = '\0';
@@ -37,9 +40,13 @@ int main(int argc, char* argv[]) {
 		} else if (streq(argv[i],"-anerouge")){
 			printf("Lancement du jeu de l\'Ane rouge\n");
 			getGame = &AR_getGame;
+			game_over = &game_over_ar;
+			rules = 1;
 		} else if (streq(argv[i],"-rushhour")){
 			printf("Lancement du jeu Rush-Hour\n");
 			getGame = &RH_getGame;
+			game_over = &game_over_hr;
+			rules = 0;
 		} else if (streq(argv[i],"-solveur")){
 			printf("Utilisation du solveur\n");
 			use_solveur = true;
@@ -55,7 +62,6 @@ int main(int argc, char* argv[]) {
 		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
 		display = &gridDisplay;
 	}
-	
 	srand((unsigned)time(NULL));
 	
 	newGame: // Point de retour pour recommencer une partie
@@ -72,11 +78,11 @@ int main(int argc, char* argv[]) {
 		if (!use_solveur) fgets(cmd, 20, stdin);
 		//cmd[0] = 'r';
 		
-		if ((use_solveur && brutStrategy(currentGame, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
+		if ((use_solveur && brutStrategy(currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
-				if (game_over_hr(currentGame)) {
+				if ((*game_over)(currentGame)) {
 					(*display)(currentGame); // on affiche la partie terminé
 					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entrée pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
 					fgets(cmd, 20, stdin);

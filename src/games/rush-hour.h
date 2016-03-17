@@ -11,4 +11,7 @@ bool RH_randomizePiece(piece pieces[], int n, int size_x, int size_y);
 
 game RH_getGame();
 
+
+bool game_over_hr(cgame g);
+
 #endif

@@ -1,5 +1,6 @@
 #include <piece.h>
 #include <game.h>
+#include "utils.h"
 #include "displayV1.h"
 
 /*
@@ -57,7 +58,7 @@ void gridDisplay(game g){
 			else printf("%s  ", color[grid[y][x]%9]);
 		}
 		//Affichage bord droit (En vert pour la case d'arrivé)
-		if (y/2 == 3) printf("%s##%s", KGRN, KNRM);
+		if (y/2 == 3 && rules == 0) printf("%s##%s", KGRN, KNRM);
 			else printf("%s##%s", KWHT, KNRM);
 		if (y == 7) printf("\tr : Relancer");
 			else if (y == 4) printf("\tq : Quitter");
@@ -66,10 +67,14 @@ void gridDisplay(game g){
 	}
 	//affichage bord inferieur
 	for(int i=0;i<game_width(g)+1;i++){
-		if(i==3|| i==2){
-		printf("%s####%s", KGRN, KNRM);
-		}else{
-		printf("%s####%s", KWHT, KNRM);
+		if(rules == 1 && i==1){
+			printf("%s##%s##%s",KWHT, KGRN, KNRM);
+		}else if(rules == 1 && i==2){
+			printf("%s####%s", KGRN, KNRM);
+		} else if(rules == 1 && i==3){
+			printf("%s##%s##%s", KGRN, KWHT,KNRM);
+		} else {
+			printf("%s####%s", KWHT, KNRM);
 		}
 	}	
 	printf("\n");
@@ -96,20 +101,22 @@ void simpleDisplay(game g){
 			}
 		}
 	}
-	//printf("\n");
-	printf("###############\n");
-	printf("\n");
+	for(int i=0;i<game_width(g)+1;i++) printf("##");
+	printf("#\n");
 	for(int y = size_y-1; y >= 0; --y){
-		printf("%s#", KNRM);
+		printf("#");
 		for(int x = 0; x < size_x; ++x){
 			if (grid[y][x] == -1) printf(" -");
 			else printf("%2d", grid[y][x]);
 		}
-		if (y == 3) printf(" =\n");
+		if (y == 3 && rules == 0) printf(" =\n");
 		else printf(" #\n");
 	}
-	printf("###############\n");
-	printf("\n");
+	for(int i=0;i<game_width(g)+1;i++){
+		if (rules == 1 &&(i == 2 || i == 3)) printf("||");
+		else printf("##");
+	}
+	printf("#\n");
 }
 
 /*

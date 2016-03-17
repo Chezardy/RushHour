@@ -1,6 +1,8 @@
 #ifndef _UTILS_
 #define _UTILS_
 
+extern int rules;
+
 char *dir_c[4]; //Uniquement utile pour comparer avec l'input
 
 /*

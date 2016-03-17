@@ -10,4 +10,7 @@ Il faudra aussi modifier les fonction d'affichage pour que les bords au et bas d
 */
 game AR_getGame();
 
+
+bool game_over_ar(cgame g);
+
 #endif
