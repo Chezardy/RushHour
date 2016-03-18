@@ -49,32 +49,44 @@ game RH_getGame() {
 	bool	level_isCorrect;
 	int		difficulty;
 	int 	nb_pieces;
-	
+	int		ref_toDelete;
+	bool	ref_gameToDelete;
 	// Generation du niveaux 
+	currentGame = NULL;
+	pieces = NULL;
+	ref_gameToDelete = false;
 	level_isCorrect = false;
 	nb_pieces = 0;
 	while (!level_isCorrect) {
 		level_isCorrect = true;
+		if (ref_gameToDelete) {
+			delete_game(currentGame);
+			ref_gameToDelete = false;
+		}
+		
 		// Si des pieces sont déjà existantes on les delete
-		if (nb_pieces != 0) {
+		/*if (nb_pieces != 0) {
 			nb_pieces = 0;
 			for (int i = 0; i < nb_pieces; ++i) {
 				delete_piece(pieces[i]);
 			}
 			free(pieces);
-		}
+		}*/
 		//On genere aléatoirement le nombre de pieces
 		nb_pieces = rand_ab(7,14);
 		pieces = malloc(nb_pieces*(sizeof(piece)));
 
 		pieces[0] = new_piece_rh(4,3,true,true); // la 1ere piece est à l'arrivé, en position de partie finie
+		ref_toDelete = 1;
 		for (int i = 1; i < nb_pieces; ++i) { // on genere les autres pieces aléatoirement
 			if (level_isCorrect) level_isCorrect = randomizePiece(pieces, i, 6, 6);
+			ref_toDelete++;
 		}
 		// si une piece n'a pas réussi à se placer,on arrete la generation et on recommence
 		if (level_isCorrect) {
 			level_isCorrect = false;
-			currentGame = new_game_hr(nb_pieces, pieces);
+			currentGame = new_game(6,6,nb_pieces, pieces);
+			ref_gameToDelete = true;
 			//Le niveaux est créé avec un certain nombre de pieces et en position de partie finie
 			// On melange donc la partie en executant un grand nombre de play_move aléatoires pour chaques pieces
 			for (int r = 0; r < RANDOMIZE; ++r) { 
@@ -95,10 +107,13 @@ game RH_getGame() {
 				}
 			}
 		}
+		for (int i = 0; i < ref_toDelete; ++i) {
+			delete_piece(pieces[i]);
+		}
+		free(pieces);
 	}
 	//creation de la partie terminé, on remet le compteur de mouvement à 0
 	set_nb_moves(currentGame, 0);
-	
 	return currentGame;
 }
 
