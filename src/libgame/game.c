@@ -2,14 +2,6 @@
 #include <stdlib.h>
 #include "game.h"
 
-struct game_s {
-	piece *pieces;
-	int nb_mouv;
-	int nb_pieces;
-	int w;
-	int h;
-};
-
 game new_game_hr (int nb_pieces, piece *pieces){
 	game g = malloc(sizeof(struct game_s));
 	if (g != NULL) {
@@ -92,10 +84,6 @@ bool play_move(game g, int piece_num, dir d, int distance){
 
 int game_nb_moves(cgame g){
 	return g->nb_mouv;
-}
-
-void set_nb_moves(game g, int nb){
-	g->nb_mouv = nb;
 }
 
 game new_game (int width, int height, int nb_pieces, piece *pieces){

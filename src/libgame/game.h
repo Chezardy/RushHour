@@ -28,6 +28,13 @@
  * See also this more technical discussion: http://stackoverflow.com/questions/8504411/typedef-pointer-const-weirdness
  *
  **/
+ struct game_s {
+	piece *pieces;
+	int nb_mouv;
+	int nb_pieces;
+	int w;
+	int h;
+};
 typedef struct game_s* game;
 typedef const struct game_s* cgame;
 
@@ -119,7 +126,5 @@ int game_height(cgame g);
  * @param y-coor of the square
  */
 int game_square_piece (game g, int x, int y);
-
-void set_nb_moves(game g, int nb);
 
 #endif

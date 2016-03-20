@@ -1,21 +1,15 @@
 #include <piece.h>
 #include <game.h>
-#include <displayV1.h>
-#include <rush-hour.h>
-#include <utils.h>
+#include "displayV1.h"
+#include "rush-hour.h"
+#include "utils.h"
 
-char *dir_c[] = {"up", "left", "down", "right"}; //Uniquement utile pour comparer avec l'input
+char *dir_c[] = {"up", "left", "down", "right"}; //Uniquement utile pour comparer avec l'input.
 
-/*
-Retourne un nombre aléatoire en a et b (compris)
-*/
 int rand_ab(int a, int b) {
 	return (rand()%((b+1)-a)) + a;
 }
 
-/*
-Retourne true si les 2 chaines sont exactement identiques.
-*/
 bool streq(char* s1, char* s2) {
 	int 	i = 1;
 	
@@ -27,11 +21,6 @@ bool streq(char* s1, char* s2) {
 	return true;
 }
 
-/*
-décompose le char* cmd pour y retrouver les 3 arguments utiles :
-la piece ciblé, la direction du mouvement et la distance a parcourir.
-Renvoie vrai si elle trouve les 3 arguments correctement, faux sinon.
-*/
 bool readCommand(char *cmd, int* target, int* direction, int* distance) {
 	char 	str[3][20]; // char** pour stocker les 3 aguments en string
 	int 	i = 0, j = 0, k = 0;
