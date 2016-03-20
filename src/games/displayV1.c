@@ -3,22 +3,20 @@
 #include "utils.h"
 #include "displayV1.h"
 
-/*
-Fonction d'affichage en mode console, dessine une grille représentant le jeu en couleurs.
-La grille affiché a une taille 2 fois supérieur à la grille de jeu.
-*/
 void gridDisplay(game g){
 	int 	y_scaled;
 	int 	x_scaled;
 	int		size_x = game_width(g);
 	int		size_y = game_height(g);
 	int		nb_pieces = game_nb_pieces(g);
-	int 	**grid = malloc(sizeof(int*)*size_y*2);
+
+	int **grid = malloc(sizeof(int*)*size_y*2);
 	for (int i = 0; i < size_y*2; ++i){
 		grid[i] = malloc(sizeof(int)*size_x*2);
 	}
-	bool 	nb_displayed[14]; // Utile pour n'afficher le numeros d'une piece qu'une seule fois
-	char* 	color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2}; //tableau des couleurs disponibles pour les pieces
+
+	bool nb_displayed[14]; // Utile pour n'afficher le numero d'une pièce qu'une seule fois
+	char* color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2}; //Tableau des couleurs disponibles pour les pieces
 
 	for (int i = 0; i < 14; ++i) nb_displayed[i] = false;
 	
@@ -41,33 +39,37 @@ void gridDisplay(game g){
 			}
 		}
 	}
-	printf("%sNombre de mouvements joué%s : %d\n",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
+
 	//affichage bord superieur
 	for(int i=0;i<game_width(g)+1;i++)printf("%s####%s", KWHT, KNRM);
 	printf("\n");
+
 	for(int y = (size_y*2)-1; y >= 0; --y){
 		//affichage bord gauche
 		printf("%s##%s",KWHT, KNRM);
+
 		//Puis pour chaques cases en largeur
 		for(int x = 0; x < (size_x*2); ++x){
 			//Si c'est une case vide, affichage en noir
 			if (grid[y][x] == - 1) printf("%s  ", KNRM);
-			//Si c'est la piece 0, affichage en rouge, et si c'est la 1ere case de la piece on affiche son numeros
+			//Si c'est la piece 0, affichage en rouge, et si c'est la 1ere case de la piece on affiche son numero
 			else if (grid[y][x] == 0 && !nb_displayed[0]) { printf("%s 0", KRED); nb_displayed[0] = true; }
 			else if (grid[y][x] == 0) printf("%s  ", KRED);
-			//Si c'est une autre piece, affichage en couleur selon son numeros, 
-			//				et si c'est la 1ere case de la piece on affiche son numeros			
+			//Si c'est une autre piece, affichage en couleur selon son numero, 
+			//et si c'est la 1ere case de la piece on affiche son numero			
 			else if (!nb_displayed[grid[y][x]]) {printf("%s%2d", color[grid[y][x]%9], grid[y][x]); nb_displayed[grid[y][x]] = true;}
 			else printf("%s  ", color[grid[y][x]%9]);
 		}
-		//Affichage bord droit (En vert pour la case d'arrivé)
+		//Affichage bord droit (En vert pour la case d'arrivée)
 		if (y/2 == 3 && rules == 0) printf("%s##%s", KGRN, KNRM);
 			else printf("%s##%s", KWHT, KNRM);
-		if (y == 7) printf("\tr : Relancer");
-			else if (y == 4) printf("\tq : Quitter");
+		if (y == 6) printf("\tr : Relancer");
+			else if (y == 3) printf("\tq : Quitter");
+			else if (y == 9) printf("\t%sMouvement%s : %d",KNRM, ((game_nb_moves(g)<2)?"":"s"), game_nb_moves(g));
 		
 		printf("\n");
 	}
+
 	//affichage bord inferieur
 	for(int i=0;i<game_width(g)+1;i++){
 		if(rules == 1 && i==1){
@@ -87,10 +89,6 @@ void gridDisplay(game g){
 	free(grid);
 }
 
-/*
-Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
-Fonctionnement similaire a DiplayGrid
-*/
 void simpleDisplay(game g){
 	int		size_x = game_width(g);
 	int		size_y = game_height(g);
@@ -133,10 +131,6 @@ void simpleDisplay(game g){
 	free(grid);
 }
 
-/*
-Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
-Affiche les coordonnées et les infos de chaques pieces
-*/
 void textDisplay(game g) {
 	int		nb_pieces = game_nb_pieces(g);
 	printf("Pieces :\n");

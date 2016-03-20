@@ -22,15 +22,18 @@ bool streq(char* s1, char* s2) {
 }
 
 bool readCommand(char *cmd, int* target, int* direction, int* distance) {
-	char 	str[3][20]; // char** pour stocker les 3 aguments en string
+	char 	str[3][20]; //char** pour stocker les 3 aguments en 3 chaines de caractères
 	int 	i = 0, j = 0, k = 0;
 
-	for (int i = 0; i < 3; i++) { // initialisation à '\0' sur tout les char
+	//Initialisation à '\0' sur tous les caractères
+	for (int i = 0; i < 3; i++) { 
 		for (int j = 0; j < 10; j++) {
 			str[i][j] = '\0';
 		}
 	}
-	while (cmd[i] != '\0' && i < 20 && j < 3) { // parcours cmd et le stock dans str[j]. A chaque espace j++ donc nouvel argument
+
+	 //Parcours cmd et le stock dans str[j]
+	while (cmd[i] != '\0' && i < 20 && j < 3) {
 		if (cmd[i] == ' ') {
 			j++;
 			k = -1;//car k incrémenté plus bas
@@ -44,9 +47,10 @@ bool readCommand(char *cmd, int* target, int* direction, int* distance) {
 	*target = atoi(str[0]);
 	*distance = atoi(str[2]);
 	*direction = -1;
+
 	for (int i = 0; i < 4; i++) {
 		if (streq(str[1], dir_c[i])) *direction = i;
 	}
-	if (*direction == -1 || *distance == 0) return false; // si la direction ou le mouvement ne sont pas trouvé (ou distance = 0) renvoie faux
+	if (*direction == -1 || *distance == 0) return false; // si la direction ou le mouvement ne sont pas trouvés (ou distance = 0) renvoie faux
 	return true;
 }

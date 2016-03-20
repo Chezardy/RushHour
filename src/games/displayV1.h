@@ -6,7 +6,6 @@
 #define KGRN  "\x1B[42;32m"
 #define KWHT  "\x1B[47;37m"
 #define KBLK  "\x1B[40;30m"
-
 #define KYEL  "\x1B[43;30m"
 #define KBLU  "\x1B[44;30m"
 #define KMAG  "\x1B[45;30m"
@@ -26,12 +25,12 @@ void gridDisplay(game g);
 
 /*
 Affichage simplifié, plus petit et sans couleur pour les terminaux ne supportant pas les escape code ANSI
-Fonctionnement similaire a DiplayGrid
+Fonctionnement similaire à gridDisplay.
 */
 void simpleDisplay(game g);
 
 /*
-Fontion d'affichage tres simplifié, a priori uniquement utile pour le débuggage
-Affiche les coordonnées et les infos de chaques pieces
+Fontion d'affichage très simplifié, à priori uniquement utile pour le débuggage.
+Affiche les coordonnées et les infos de chaques pieces.
 */
 void textDisplay(game g);
