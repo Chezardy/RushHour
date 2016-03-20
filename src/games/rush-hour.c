@@ -2,11 +2,8 @@
 #include <game.h>
 #include "utils.h"
 
-#define RANDOMIZE 80
-
-void set_nb_moves(game g, int nb_moves) {
-	g->nb_mouv = nb_moves;
-}
+#define NB_RANDOMIZES 80 
+#define RH_SIZE_GAME 6
 
 bool randomizePiece(piece pieces[], int n, int size_x , int size_y) {
 	bool 	finished = false;
@@ -78,18 +75,18 @@ game RH_getGame() {
 
 		//On génère les autres pièces aléatoirement
 		for (int i = 1; i < nb_pieces; ++i) {
-			if (level_isCorrect) level_isCorrect = randomizePiece(pieces, i, 6, 6);
+			if (level_isCorrect) level_isCorrect = randomizePiece(pieces, i, RH_SIZE_GAME, RH_SIZE_GAME);
 			if (level_isCorrect) ref_toDelete++;
 		}
 		
 		//Si une pièce n'a pas réussi à se placer,on arrête la génération et on recommence
 		if (level_isCorrect) {
 			level_isCorrect = false;
-			currentGame = new_game(6,6,nb_pieces, pieces);
+			currentGame = new_game(RH_SIZE_GAME,RH_SIZE_GAME,nb_pieces, pieces);
 			ref_gameToDelete = true;
 			//Le niveau est créé avec un certain nombre de pièces et en position de partie finie
 			//On mélange donc la partie en exécutant un grand nombre de play_move aléatoires pour chaque pièce
-			for (int r = 0; r < RANDOMIZE; ++r) { 
+			for (int r = 0; r < NB_RANDOMIZES; ++r) { 
 				for (int i = 0; i < nb_pieces; ++i) {
 					if (i == 0) play_move(currentGame, i, 1, 1);//La 1ère pièce ne bouge que vers la gauche
 					//On effectue les play_move dans des direction que la pièce peut suivre
@@ -114,8 +111,22 @@ game RH_getGame() {
 		free(pieces);
 	}
 	//La création de la partie étant terminée, on remet le compteur de mouvements à 0
-	set_nb_moves(currentGame, 0);
-	return currentGame;
+	piece* copy_pieces = malloc(sizeof(piece)*nb_pieces);
+	for(int i=0;i<nb_pieces;i++){
+		copy_pieces[i] = new_piece(0,0,0,0,0,0);
+		copy_piece(game_piece(currentGame,i),copy_pieces[i]);
+	}
+
+	game copy_game = new_game(RH_SIZE_GAME,RH_SIZE_GAME,nb_pieces,copy_pieces);
+
+	//Supression du tableau de pièces
+	for (int i = 0; i < nb_pieces; ++i) {
+		delete_piece(copy_pieces[i]);
+	}
+	free(copy_pieces);
+
+	return copy_game;
+
 }
 
 bool game_over_hr(cgame g){

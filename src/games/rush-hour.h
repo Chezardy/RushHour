@@ -4,12 +4,6 @@
 #define RANDOMIZE 80
 
 /*
-Modifie le nombre de mouvements de la partie qui ont été comptés automatiquement.
-Paramètre nb_moves: nombre de mouvements. 
-*/
-void set_nb_moves(game g, int nb_moves);
-
-/*
 Génère une piece placée aléatoirement sur la grille, qui ne dépasse pas de la grille et qui ne chevauche pas d'autres pièces.
 Attention, générer trop de pièces sur une grille trop petite peut faire boucler cette fonction !
 */
