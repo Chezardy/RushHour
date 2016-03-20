@@ -13,7 +13,10 @@ void gridDisplay(game g){
 	int		size_x = game_width(g);
 	int		size_y = game_height(g);
 	int		nb_pieces = game_nb_pieces(g);
-	int 	grid[size_y*2][size_x*2];
+	int 	**grid = malloc(sizeof(int*)*size_y*2);
+	for (int i = 0; i < size_y*2; ++i){
+		grid[i] = malloc(sizeof(int)*size_x*2);
+	}
 	bool 	nb_displayed[14]; // Utile pour n'afficher le numeros d'une piece qu'une seule fois
 	char* 	color[] = {KYEL,KBLU,KMAG,KCYN,KYEL2,KBLU2,KMAG2,KCYN2,KGRN2}; //tableau des couleurs disponibles pour les pieces
 
@@ -78,6 +81,10 @@ void gridDisplay(game g){
 		}
 	}	
 	printf("\n");
+	for (int i = 0; i < size_y*2; ++i){
+		free(grid[i]);
+	}
+	free(grid);
 }
 
 /*
@@ -88,7 +95,10 @@ void simpleDisplay(game g){
 	int		size_x = game_width(g);
 	int		size_y = game_height(g);
 	int		nb_pieces = game_nb_pieces(g);
-	int grid[size_y][size_x];
+	int 	**grid = malloc(sizeof(int*)*size_y);
+	for (int i = 0; i < size_y; ++i){
+		grid[i] = malloc(sizeof(int)*size_x);
+	}
 	for(int x = 0; x < size_x; ++x){
 		for(int y = 0; y < size_y; ++y){
 			grid[y][x] = -1;
@@ -117,6 +127,10 @@ void simpleDisplay(game g){
 		else printf("##");
 	}
 	printf("#\n");
+	for (int i = 0; i < size_y; ++i){
+		free(grid[i]);
+	}
+	free(grid);
 }
 
 /*

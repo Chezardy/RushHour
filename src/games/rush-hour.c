@@ -68,15 +68,6 @@ game RH_getGame() {
 			delete_game(currentGame);
 			ref_gameToDelete = false;
 		}
-		
-		//Si des pieces sont déjà existantes on les delete
-		/*if (nb_pieces != 0) {
-			nb_pieces = 0;
-			for (int i = 0; i < nb_pieces; ++i) {
-				delete_piece(pieces[i]);
-			}
-			free(pieces);
-		}*/
 
 		//On génère aléatoirement le nombre de pièces
 		nb_pieces = rand_ab(7,14);
@@ -90,8 +81,7 @@ game RH_getGame() {
 			if (level_isCorrect) level_isCorrect = randomizePiece(pieces, i, 6, 6);
 			if (level_isCorrect) ref_toDelete++;
 		}
-		if(!level_isCorrect) ref_toDelete++;
-
+		
 		//Si une pièce n'a pas réussi à se placer,on arrête la génération et on recommence
 		if (level_isCorrect) {
 			level_isCorrect = false;
