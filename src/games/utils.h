@@ -1,7 +1,7 @@
 #ifndef _UTILS_
 #define _UTILS_
 
-extern int rules;
+extern int rules; //Variable globale utilisée pour determiner quelles règles de jeu doivent être utilisées
 
 char *dir_c[4]; //Uniquement utile pour comparer avec l'input
 

@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
 	getGame = NULL;
 	for (int i = 1; i < argc;i++) {
 		if (streq(argv[i],"-nocolor")) {
-			printf("#Affichage simplifié sans couleur\n");
+			printf("#Affichage simplifie sans couleur\n");
 			display = &simpleDisplay;
 		} else if (streq(argv[i],"-text")) {
 			printf("#Affichage minimaliste\n");
@@ -76,7 +76,6 @@ int main(int argc, char* argv[]) {
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
 		if (!use_solveur) fgets(cmd, 20, stdin);
-		//cmd[0] = 'r';
 		
 		if ((use_solveur && brutStrategy(currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
@@ -84,7 +83,7 @@ int main(int argc, char* argv[]) {
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
 				if ((*game_over)(currentGame)) {
 					(*display)(currentGame); // on affiche la partie terminé
-					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entrée pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
+					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entree pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
 					fgets(cmd, 20, stdin);
 					delete_game(currentGame);
 					goto newGame;
@@ -95,7 +94,7 @@ int main(int argc, char* argv[]) {
 			}
 			/*Fin du tour*/
 		} else if (cmd[0] != '\0' && !streq(cmd,"r") && !streq(cmd,"q")) { //usage si la commande est incorrecte et qu'elle n'est pas un "exit"
-			printf("usage : <numeros piece> <up/left/down/right> <distance>\nAttention certaines touches, commes les flèches, peuvent changer la commande envoyée\n");
+			printf("usage : <numeros piece> <up/left/down/right> <distance>\nAttention certaines touches, commes les fleches, peuvent changer la commande envoyee\n");
 		} else if (streq(cmd,"r")) { //Si la commande est "r" on relance une partie
 			printf("\n\nNouvelle partie\n");
 			delete_game(currentGame);

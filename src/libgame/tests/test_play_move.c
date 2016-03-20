@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
 */
 
 	int nb = 4;
-	piece pieces[nb];
+	piece *pieces = malloc(nb*sizeof(piece));
 	pieces[0] = new_piece(1,3,2,1,true,false);
 	pieces[1] =	new_piece(5,3,1,3,false,true);
 	pieces[2] =	new_piece(0,0,2,1,true,false);
