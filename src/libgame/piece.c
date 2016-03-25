@@ -3,14 +3,12 @@
 struct piece_s {
 	int x;
 	int y;
-	///bool is_horizontal;
-	///bool small;
 	int w;
 	int h;
 	bool move_x;
 	bool move_y;
 };
-//position, its shape and its ability to move vertically or horizontally
+
 piece new_piece_rh (int x, int y, bool small, bool horizontal) {
 	piece output = malloc(sizeof(struct piece_s));
 	if (output == NULL) {
@@ -61,7 +59,7 @@ void move_piece (piece p, dir d, int distance){
 	}
 }
 
-bool intersect(cpiece p1, cpiece p2) { //Peut surement être amélioré
+bool intersect(cpiece p1, cpiece p2) {
 	for(int i = 0; i < get_height(p1); ++i) {
 		for(int j = 0; j < get_width(p1); ++j) { 
 			for(int i2 = 0; i2 < get_height(p2); ++i2) {
@@ -104,13 +102,7 @@ bool can_move_x(cpiece p) {
 bool can_move_y(cpiece p){
 	return p->move_y;
 }
-/**
- * @brief Initialized piece structure
- * @param x,y: coordinates of the bottom left corner of the piece
- * @param move_x: indicates if the piece is allowed to move horizontally
- * @param move_y: indicates if the piece is allowed to move vertically
- * @return created piece at a given position
- */
+
 piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
 	piece output = malloc(sizeof(struct piece_s));
 	if (output == NULL) {
@@ -120,9 +112,9 @@ piece new_piece (int x, int y, int width, int height, bool move_x, bool move_y){
 	output->x = x;
 	output->y = y;
 	output->w = width;
-	output->h = height;//
-	output->move_x = move_x;//
-	output->move_y = move_y;//
+	output->h = height;
+	output->move_x = move_x;
+	output->move_y = move_y;
 	
 	return output;
 }

@@ -49,10 +49,6 @@ cpiece game_piece(cgame g, int piece_num){
 	return g->pieces[piece_num];
 }
 
-/*bool game_over(cgame g){
-	return get_x(g->pieces[0])==4 && get_y(g->pieces[0])==3;
-}*/
-
 bool play_move(game g, int piece_num, dir d, int distance){
 	if ((!can_move_y(g->pieces[piece_num]) && (d == 0 || d == 2))
 			|| ((!can_move_x(g->pieces[piece_num])) && (d == 1 || d == 3))) return false;
@@ -100,27 +96,14 @@ game new_game (int width, int height, int nb_pieces, piece *pieces){
 	return g;
 }
 
-
-/**
- *@brief return the width of the grid
- */
 int game_width(cgame g){
 	return g->w;
 }
 
-/**
- *@brief return the height of the grid
- */
 int game_height(cgame g){
 	return g->h;
 }
 
-/**
- * @brief return the number of then piece located on this square (-1 if no piece is present)
- * @param game
- * @param x-coor of the square
- * @param y-coor of the square
- */
 int game_square_piece (game g, int x, int y){
 	for (int p = 0; p < game_nb_pieces(g); ++p) {
 		for(int i = 0; i < get_height(g->pieces[p]); ++i) {

@@ -75,9 +75,11 @@ int main(int argc, char* argv[]) {
 		// attente de la demande de l'utilisateur
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
+
 		if (!use_solveur) fgets(cmd, 20, stdin);
 		
-		if ((use_solveur && brutStrategy(currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance))|| readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
+		if ((use_solveur && brutStrategy(currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance))
+			|| (readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance) && cmd_target>0 && cmd_target<game_nb_pieces(currentGame)-1)) { //si la commande est correcte et que la piece existe
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
