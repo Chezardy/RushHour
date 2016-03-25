@@ -21,7 +21,8 @@ bool streq(char* s1, char* s2) {
 	return true;
 }
 
-bool readCommand(char *cmd, int* target, int* direction, int* distance) {
+bool readCommand(char *cmd, game g, bool (*game_over)(cgame), int* target, int* direction, int* distance) {
+	(void)(game_over);
 	char 	str[3][20]; //char** pour stocker les 3 aguments en 3 chaines de caractères
 	int 	i = 0, j = 0, k = 0;
 
@@ -51,6 +52,6 @@ bool readCommand(char *cmd, int* target, int* direction, int* distance) {
 	for (int i = 0; i < 4; i++) {
 		if (streq(str[1], dir_c[i])) *direction = i;
 	}
-	if (*direction == -1 || *distance == 0) return false; // si la direction ou le mouvement ne sont pas trouvés (ou distance = 0) renvoie faux
+	if (*direction == -1 || *distance <= 0 || *target < 0 || *target >= game_nb_pieces(g)) return false; // si la direction ou le mouvement ne sont pas trouvés (ou distance = 0) renvoie faux
 	return true;
 }

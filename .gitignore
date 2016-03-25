@@ -30,3 +30,7 @@
 
 # Debug files
 *.dSYM/
+
+# Builds files n others
+build/
+*.lnk

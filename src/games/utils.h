@@ -20,6 +20,6 @@ Décompose le char* cmd pour y retrouver les 3 arguments utiles :
 la pièce ciblée, la direction du mouvement et la distance à parcourir.
 Renvoie vrai si elle trouve les 3 arguments correctement, faux sinon.
 */
-bool readCommand(char *cmd, int* target, int* direction, int* distance);
+bool readCommand(char *cmd, game g, bool (*game_over)(cgame), int* target, int* direction, int* distance);
 
 #endif

@@ -4,7 +4,8 @@
 #include "strategies.h"
 #include "displayV1.h"
 
-bool brutStrategy(game g, bool (*game_over)(cgame),int *cmd_target, int *cmd_direction, int *cmd_distance) {
+bool brutStrategy(char* cmd, game g, bool (*game_over)(cgame), int *cmd_target, int *cmd_direction, int *cmd_distance) {
+	(void)(cmd);
 	*cmd_target = rand_ab(0,game_nb_pieces(g)-1);
 	if (is_horizontal(game_piece(g, *cmd_target))) *cmd_direction =  (rand_ab(0,1)?1:3);
 	else *cmd_direction =  (rand_ab(0,1)?0:2);

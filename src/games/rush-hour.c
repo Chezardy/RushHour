@@ -124,7 +124,7 @@ game RH_getGame() {
 		delete_piece(copy_pieces[i]);
 	}
 	free(copy_pieces);
-
+	delete_game(currentGame);
 	return copy_game;
 
 }

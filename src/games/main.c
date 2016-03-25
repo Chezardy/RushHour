@@ -14,6 +14,8 @@
 
 int rules = -1; // determine le type du jeu en cours pour des fonctions qui en dépendents (comme display)
 
+typedef void (*funcptr)(void);
+
 int main(int argc, char* argv[]) {
 	char 	cmd[20]; // contiendra l'input de l'utilisateur
 	int 	cmd_target;
@@ -23,6 +25,7 @@ int main(int argc, char* argv[]) {
 	void	(*display)(game);
 	game	(*getGame)();
 	bool	(*game_over)(cgame);
+	bool	(*command)(char*, game, bool(*funcptr)(cgame), int*, int*, int*);
 	bool	use_solveur;
 
 	for (int j = 0; j < 20; j++) cmd[j] = '\0';
@@ -30,6 +33,7 @@ int main(int argc, char* argv[]) {
 	use_solveur = false;
 	display = NULL;
 	getGame = NULL;
+	command = NULL;
 	for (int i = 1; i < argc;i++) {
 		if (streq(argv[i],"-nocolor")) {
 			printf("#Affichage simplifie sans couleur\n");
@@ -49,6 +53,7 @@ int main(int argc, char* argv[]) {
 			rules = 0;
 		} else if (streq(argv[i],"-solveur")){
 			printf("Utilisation du solveur\n");
+			command = &brutStrategy;
 			use_solveur = true;
 		}
 	}
@@ -57,7 +62,9 @@ int main(int argc, char* argv[]) {
 		printf("Liste des arguments possibles :\n-anerouge : Ane rouge\n-rushhour : Rush-Hour\n");
 		exit(0);
 	}
-	
+	if (command == NULL) {
+		command = &readCommand;
+	}
 	if (display == NULL) {
 		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
 		display = &gridDisplay;
@@ -75,11 +82,9 @@ int main(int argc, char* argv[]) {
 		// attente de la demande de l'utilisateur
 		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
 		printf("Entrez votre commande : ");
-
 		if (!use_solveur) fgets(cmd, 20, stdin);
 		
-		if ((use_solveur && brutStrategy(currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance))
-			|| (readCommand(cmd, &cmd_target, &cmd_direction, &cmd_distance) && cmd_target>0 && cmd_target<game_nb_pieces(currentGame)-1)) { //si la commande est correcte et que la piece existe
+		if ((*command)(cmd, currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
 			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
 			/*Déroulement d'un tour du jeu*/
 			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
