@@ -4,110 +4,149 @@
 #include <string.h>
 #include <time.h>
 
+#include <SDL2/SDL.h>
+
 #include <piece.h>
 #include <game.h>
-#include "displayV1.h"
+#include "displayV2.h"
 #include "rush-hour.h"
 #include "anerouge.h"
 #include "utils.h"
 #include "strategies.h"
+
 
 int rules = -1; // determine le type du jeu en cours pour des fonctions qui en dépendents (comme display)
 
 typedef void (*funcptr)(void);
 
 int main(int argc, char* argv[]) {
-	char 	cmd[20]; // contiendra l'input de l'utilisateur
-	int 	cmd_target;
-	int 	cmd_direction;
-	int 	cmd_distance;
-	game	currentGame;
-	void	(*display)(game);
-	game	(*getGame)();
-	bool	(*game_over)(cgame);
-	bool	(*command)(char*, game, bool(*funcptr)(cgame), int*, int*, int*);
-	bool	use_solveur;
-
-	for (int j = 0; j < 20; j++) cmd[j] = '\0';
+	game			currentGame;
+	game			(*getGame)();
+	bool			(*game_over)(cgame);
+	bool			use_solveur;
+	SDL_Window* 	win;
+	SDL_Renderer* 	rdr;	
+	Input 			input;
+	unsigned int 	sync;
+    bool 			quit;
+	int				wait_conf;//1:reset, 2:quitter, 3:Fin de partie
+	int				target;
+	TTF_Font*		font;
 	
+	sync = 64;
+	wait_conf = 0;
+	target = 0;
+	input.down = 0; // à faire pour tout l'input ?
+	input.enter = 0;
+    quit = false;
 	use_solveur = false;
-	display = NULL;
+	currentGame = NULL;
 	getGame = NULL;
-	command = NULL;
+	win = NULL;
+	rdr = NULL;
+	
+	srand((unsigned)time(NULL));
+	
+	//Lecture des arguments
 	for (int i = 1; i < argc;i++) {
-		if (streq(argv[i],"-nocolor")) {
-			printf("#Affichage simplifie sans couleur\n");
-			display = &simpleDisplay;
-		} else if (streq(argv[i],"-text")) {
-			printf("#Affichage minimaliste\n");
-			display = &textDisplay;
-		} else if (streq(argv[i],"-anerouge")){
-			printf("Lancement du jeu de l\'Ane rouge\n");
+		if (streq(argv[i],"-anerouge")){
 			getGame = &AR_getGame;
 			game_over = &game_over_ar;
 			rules = 1;
+			win = initWindow("Rush-Hour");
+			rdr = initRenderer(win);
 		} else if (streq(argv[i],"-rushhour")){
 			printf("Lancement du jeu Rush-Hour\n");
 			getGame = &RH_getGame;
 			game_over = &game_over_hr;
 			rules = 0;
+			win = initWindow("Rush-Hour");
+			rdr = initRenderer(win);
 		} else if (streq(argv[i],"-solveur")){
 			printf("Utilisation du solveur\n");
-			command = &brutStrategy;
 			use_solveur = true;
 		}
 	}
-	
 	if (getGame == NULL) {
 		printf("Liste des arguments possibles :\n-anerouge : Ane rouge\n-rushhour : Rush-Hour\n");
 		exit(0);
 	}
-	if (command == NULL) {
-		command = &readCommand;
+	//Initialisation Police de carac.
+	font = TTF_OpenFont("OpenSans-Regular.ttf", 40);
+	printf("font main : %d\n", font);
+	if (font == NULL) {
+		printf("Error SDL_ttf : %s\n", TTF_GetError());
+		exit(1);
 	}
-	if (display == NULL) {
-		printf("#Si votre terminal ne permet pas l'utilisation de code ANSI, utilisez l'argument \"-nocolor\" ou \"-text\"\n");
-		display = &gridDisplay;
-	}
-	srand((unsigned)time(NULL));
 	
-	newGame: // Point de retour pour recommencer une partie
-	
-	currentGame = (getGame)();
-	
-	// Debut du jeu
-	while (!streq(cmd,"q")) { // tant qu'on n'entre pas "exit", boucle le programme
-		// Affichage de la grille
-		(*display)(currentGame);
-		// attente de la demande de l'utilisateur
-		for (int j = 0; j < 20; j++) cmd[j] = '\0'; // vidage de cmp (inutile?)
-		printf("Entrez votre commande : ");
-		if (!use_solveur) fgets(cmd, 20, stdin);
+    // Boucle infinie, principale, du jeu 
+    while (!quit){
+		if (currentGame == NULL) currentGame = (getGame)();
 		
-		if ((*command)(cmd, currentGame, game_over, &cmd_target, &cmd_direction, &cmd_distance)) { //si la commande est correcte
-			printf("Commande : deplacer la piece %d de %d case(s) dans la direction %i\n", cmd_target, cmd_distance, cmd_direction);
-			/*Déroulement d'un tour du jeu*/
-			if (play_move(currentGame, cmd_target, cmd_direction, cmd_distance)) {	
-				if ((*game_over)(currentGame)) {
-					(*display)(currentGame); // on affiche la partie terminé
-					printf("%sPartie finie en %d mouvement%s !%s\n Appuyer sur entree pour rejouer ! ",KGRN2 ,game_nb_moves(currentGame), ((game_nb_moves(currentGame)<2)?"":"s"), KNRM);
-					fgets(cmd, 20, stdin);
-					delete_game(currentGame);
-					goto newGame;
-				}
-			} else {
-				//Si l'action ne peut pas être réalisé par le play_move
-				printf("\t%sAction impossible%s\n", KRED, KNRM);
+        gestionInputs(&input);
+        
+		SDL_Display(currentGame, rdr, font, wait_conf);
+		
+		//Commandes ULDR
+		if (!use_solveur){
+			if (input.left == 1) {
+				play_move(currentGame,target,LEFT,1);
+				printf("LEFT\n");
 			}
-			/*Fin du tour*/
-		} else if (cmd[0] != '\0' && !streq(cmd,"r") && !streq(cmd,"q")) { //usage si la commande est incorrecte et qu'elle n'est pas un "exit"
-			printf("usage : <numeros piece> <up/left/down/right> <distance>\nAttention certaines touches, commes les fleches, peuvent changer la commande envoyee\n");
-		} else if (streq(cmd,"r")) { //Si la commande est "r" on relance une partie
-			printf("\n\nNouvelle partie\n");
-			delete_game(currentGame);
-			goto newGame;
+			if (input.right == 1) {
+				play_move(currentGame,target,RIGHT,1);
+				printf("RIGHT\n");
+			}
+			if (input.up == 1) {
+				play_move(currentGame,target,UP,1);
+				printf("UP\n");
+			}
+			if (input.down == 1) {
+				play_move(currentGame,target,DOWN,1);
+				printf("DOWN\n");
+			}
+		} else {
+			if (wait_conf == 0) brutStrategy(currentGame, game_over);
 		}
-	}
+		//Click souris
+		if (input.mouse == 1){
+			if (game_square_piece(currentGame, input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame))) != -1) 
+					target = game_square_piece(currentGame,  input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame)));
+			printf("%d : %d, p%d\n",input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame)), target);
+		}
+		//Quitter Partie
+		if (wait_conf == 2 && input.quit == 0 && input.enter == 1){
+			quit = true;
+		}
+		if (input.quit == 1 && wait_conf == 0) wait_conf = 2;
+		//Reset partie
+		if (input.newGame == 1 && wait_conf == 0) wait_conf = 1;
+		if (wait_conf == 1 && input.newGame == 0 && input.enter == 1){
+			delete_game(currentGame);
+			currentGame = NULL;
+			wait_conf = 0;
+		}
+		//Nouvelle Partie
+		if  (currentGame != NULL && (*game_over)(currentGame)){
+			wait_conf = 3;
+		}
+		if (wait_conf == 3 && input.enter == 1) {
+			delete_game(currentGame);
+			currentGame = NULL;
+			wait_conf = 0;
+		}
+		//Quitter popup
+		if (input.escape == 1 && wait_conf == 3) quit = true;
+		if (input.escape == 1 && wait_conf != 0) wait_conf = 0;
+        if (!use_solveur || wait_conf != 0){
+			delay(sync);
+			sync = SDL_GetTicks() + 64;
+		}
+    }
+
+	
+	SDL_Free(win,rdr);
 	delete_game(currentGame);
+	
 	return EXIT_SUCCESS;
 }

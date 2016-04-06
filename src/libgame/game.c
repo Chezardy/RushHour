@@ -105,14 +105,42 @@ int game_height(cgame g){
 }
 
 int game_square_piece (game g, int x, int y){
-	for (int p = 0; p < game_nb_pieces(g); ++p) {
+	/*for (int p = 0; p < game_nb_pieces(g); ++p) {
 		for(int i = 0; i < get_height(g->pieces[p]); ++i) {
 			for(int j = 0; j < get_width(g->pieces[p]); ++j) { 
 				if (get_x(g->pieces[p])+i == x && get_y(g->pieces[p])+j == y) return p;
 			}
 		}
 	}
-	return -1;
+	return -1;*/
+	int		size_x = game_width(g);
+	int		size_y = game_height(g);
+	int		nb_pieces = game_nb_pieces(g);
+	int 	**grid = malloc(sizeof(int*)*size_y);
+	int		output;
+	
+	for (int i = 0; i < size_y; ++i){
+		grid[i] = malloc(sizeof(int)*size_x);
+	}
+	for(int x = 0; x < size_x; ++x){
+		for(int y = 0; y < size_y; ++y){
+			grid[y][x] = -1;
+		}
+	}
+	for (int i = 0; i < nb_pieces; i++) {
+		for (int x = 0; x < get_width(game_piece(g, i)); x++) {
+			for (int y = 0; y < get_height(game_piece(g, i)); y++) {
+				grid[get_y(game_piece(g, i))+y][get_x(game_piece(g, i))+x] = i;
+			}
+		}
+	}
+	output = grid[y][x];
+	for (int i = 0; i < size_y; ++i){
+		free(grid[i]);
+	}
+	free(grid);
+	
+	return output;
 }
 
 

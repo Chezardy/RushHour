@@ -55,3 +55,150 @@ bool readCommand(char *cmd, game g, bool (*game_over)(cgame), int* target, int* 
 	if (*direction == -1 || *distance <= 0 || *target < 0 || *target >= game_nb_pieces(g)) return false; // si la direction ou le mouvement ne sont pas trouvés (ou distance = 0) renvoie faux
 	return true;
 }
+
+void gestionInputs(Input *input)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+ 
+            case SDL_QUIT:
+                exit(0);
+            break;
+ 
+			case SDL_MOUSEBUTTONDOWN:
+				switch(event.button.button){
+					case SDL_BUTTON_LEFT:
+						input->mouse = 1;
+					break;
+				}
+			break;
+			
+			case SDL_MOUSEBUTTONUP:
+				switch(event.button.button){
+					case SDL_BUTTON_LEFT:
+						input->mouse = 0;
+					break;
+				}
+			break;
+			
+			case SDL_MOUSEMOTION:
+				input->mouse_x = event.motion.x;
+				input->mouse_y = event.motion.y;
+			break;
+ 
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_ESCAPE:
+                        input->escape = 1;
+                    break;
+ 
+                    case SDLK_DELETE:
+                        input->erase = 1;
+                    break;
+ 
+                    case SDLK_r:
+                        input->newGame = 1;
+                    break;
+					
+					case SDLK_q:
+                        input->quit = 1;
+                    break;
+ 
+                    case SDLK_LEFT:
+                        input->left = 1;
+                    break;
+ 
+                    case SDLK_RIGHT:
+                        input->right = 1;
+                    break;
+ 
+                    case SDLK_DOWN:
+                        input->down = 1;
+                    break;
+ 
+                    case SDLK_UP:
+                        input->up = 1;
+                    break;
+ 
+ 
+                    case SDLK_RETURN:
+                        input->enter = 1;
+                    break;
+ 
+                    default:
+                    break;
+                }
+            break;
+ 
+            case SDL_KEYUP:
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_DELETE:
+                        input->erase = 0;
+                    break;
+					
+					case SDLK_ESCAPE:
+                        input->escape = 0;
+                    break;
+					
+					case SDLK_r:
+                        input->newGame = 0;
+                    break;
+					
+					case SDLK_q:
+                        input->quit = 0;
+                    break;
+					
+                    case SDLK_LEFT:
+                        input->left = 0;
+                    break;
+ 
+                    case SDLK_RIGHT:
+                        input->right = 0;
+                    break;
+ 
+                    case SDLK_DOWN:
+                        input->down = 0;
+                    break;
+ 
+                    case SDLK_UP:
+                        input->up = 0;
+                    break;
+ 
+                    case SDLK_RETURN:
+                        input->enter = 0;
+                    break;
+ 
+                    default:
+                    break;
+                }
+            break;
+ 
+        }
+ 
+    }
+}
+
+void delay(unsigned int frameLimit)
+{
+    unsigned int ticks = SDL_GetTicks();
+ 
+    if (frameLimit < ticks)
+    {
+        return;
+    }
+ 
+    if (frameLimit > ticks + 64)
+    {
+        SDL_Delay(64);
+    }
+ 
+    else
+    {
+        SDL_Delay(frameLimit - ticks);
+    }
+}
