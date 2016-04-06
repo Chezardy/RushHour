@@ -22,7 +22,7 @@ SDL_Window* initWindow(char* title){
 SDL_Renderer* initRenderer(SDL_Window* win){
 	SDL_Renderer* rdr = NULL;
     rdr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	printf("Renderer : %d\n", rdr);
+	printf("Renderer : %p\n", rdr);
     if (rdr == NULL) {
         printf("Error SDL : Initializing SDL renderer\n");
         exit(1);

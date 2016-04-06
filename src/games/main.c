@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 	}
 	//Initialisation Police de carac.
 	font = TTF_OpenFont("OpenSans-Regular.ttf", 40);
-	printf("font main : %d\n", font);
+	printf("font main : %p\n", font);
 	if (font == NULL) {
 		printf("Error SDL_ttf : %s\n", TTF_GetError());
 		exit(1);
