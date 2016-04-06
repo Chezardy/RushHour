@@ -1,8 +1,8 @@
 #créé l'exécutable rush-hour
-add_executable(jeux rush-hour.c anerouge.c displayV1.c main.c utils.c strategies.c)
+add_executable(jeux rush-hour.c anerouge.c displayV2.c main.c utils.c strategies.c)
 
 #spécifie la librairie nécessaire pour l'exécutable "rush-hour"
-target_link_libraries(jeux game)
+target_link_libraries(jeux game SDL2 SDL2_ttf)
 
 #spécifie l'emplacement de la librairie
 link_directories(${RUSH_HOUR_BINARY_DIR}/src/game)
