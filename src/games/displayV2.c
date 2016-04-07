@@ -13,7 +13,7 @@ SDL_Window* initWindow(char* title){
  
     if (win == NULL)
     {
-        printf("Error SDL : Initializing SDL window");
+        printf("Erreur SDL : Initialisation de la fenetre SDL");
         exit(1);
     }
 	return win;
@@ -22,14 +22,14 @@ SDL_Window* initWindow(char* title){
 SDL_Renderer* initRenderer(SDL_Window* win){
 	SDL_Renderer* rdr = NULL;
     rdr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	printf("Renderer : %p\n", rdr);
+	//printf("Renderer : %p\n", rdr); //set au débuggage
     if (rdr == NULL) {
-        printf("Error SDL : Initializing SDL renderer\n");
+        printf("Erreur SDL : Initialisation du renderer SDL\n");
         exit(1);
     }
 	
 	if(TTF_Init() < 0) {
-		printf("Error SDL : %s\n", TTF_GetError());
+		printf("Erreur SDL : %s\n", TTF_GetError());
 		exit(1);
 	}
 	
