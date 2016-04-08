@@ -5,20 +5,14 @@
 
 SDL_Window* initWindow(char* title){
 	SDL_Window* win;
-	if(rules==0){ // pour afficher la fenetre de Rush hour 
-		win = SDL_CreateWindow(title,
-			SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED,
-			SCREEN_X, SCREEN_Y,
-			SDL_WINDOW_SHOWN);
-	}
-	else if(rules==1){ // pôur afficher la fenetre de Ane rouge
+	 
 		win = SDL_CreateWindow(title,
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
 			SCREEN_X, SCREEN_Y+10,
 			SDL_WINDOW_SHOWN);
-	}
+	
+	
  
     if (win == NULL){
         printf("Erreur SDL : Initialisation de la fenetre SDL");
@@ -60,7 +54,7 @@ int color[14][3] = {
 	{38,166,91},
 	{247,202,24},
 	{211,84,0},
-	{108,122,137},
+	{158, 14 ,64},
 	{249,156,18},
 	{30,130,76},
 	{200,247,197},
@@ -85,31 +79,67 @@ void drawText(SDL_Renderer* rdr, TTF_Font* font, SDL_Color color, int x, int y, 
 
 void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	SDL_Rect rect;
+	
 	SDL_Color fontColor = {255, 255, 255};
 
 	rect.w = (SCREEN_Y/game_height(g));
 	rect.h = (SCREEN_Y/game_height(g));
 
-	SDL_SetRenderDrawColor(rdr, 200,200,200, 255);
+	SDL_SetRenderDrawColor(rdr, 192,192,192, 255);
 	SDL_RenderClear(rdr);
-	SDL_SetRenderDrawColor(rdr, 0,200,0, 255);
+	SDL_SetRenderDrawColor(rdr, 0,255,127, 255);
 
 	if(rules==0){//pour la Sortie des piece de Rush hour 
 		rect.y = (SCREEN_Y/game_height(g))*2;
 		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
 		rect.h = (SCREEN_Y/game_height(g));
 		rect.w = 10;
+		SDL_RenderFillRect(rdr, &rect);
+		SDL_SetRenderDrawColor(rdr, 105,105,105, 255);
+		rect.y = 0;
+		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
+		rect.w = 10;
+		rect.h = ((SCREEN_Y/game_height(g))*2);
+		SDL_RenderFillRect(rdr, &rect);
+		rect.y = ((SCREEN_Y/game_height(g))*3);
+		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
+		rect.w = 10;
+		rect.h = ((SCREEN_Y/game_height(g))*3);
+		SDL_RenderFillRect(rdr, &rect);
+		rect.y = (SCREEN_Y);
+		rect.x = 0;
+		rect.w = SCREEN_X ;
+		rect.h = 10;
+		SDL_RenderFillRect(rdr, &rect);
 	}
 
-	else if(rules==1){ //pour la Sortie des piece de Ane rouge ..manque de precision
+	else if(rules==1){ //pour la Sortie des piece de Ane rouge 
+
 		rect.y = SCREEN_Y;
 		rect.x = (SCREEN_Y/game_height(g));
 		rect.h = 10;
 		rect.w = (SCREEN_Y/game_height(g))*2;
+		SDL_RenderFillRect(rdr, &rect);
+		SDL_SetRenderDrawColor(rdr, 105,105,105, 255);
+		rect.y = 0;
+		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
+		rect.w = 10;
+		rect.h = SCREEN_Y;
+		SDL_RenderFillRect(rdr, &rect);
+		rect.y = SCREEN_Y;
+		rect.x = 0;
+		rect.w = (SCREEN_Y/game_height(g));
+		rect.h = 10;
+		SDL_RenderFillRect(rdr, &rect);
+		rect.y = SCREEN_Y;
+		rect.x = ((SCREEN_Y/game_height(g))*3);
+		rect.w = ((SCREEN_Y/game_height(g))*6);
+		rect.h = 10;
+		SDL_RenderFillRect(rdr, &rect);
 	}
-	SDL_RenderFillRect(rdr, &rect);
-
-
+	
+	
+	
 	//Affichage des pièces
 	for(int i = 0; i < game_nb_pieces(g); ++i){
 		SDL_SetRenderDrawColor(rdr, color[i][0],color[i][1],color[i][2], 255);
@@ -122,7 +152,7 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	}
 
 	//Affichage du nombre de mouvements
-	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,"Mouvements : ");
+	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,"Mouvements : ");//mais ou est le compteurr ??
 
 	//Affichage des règles
 	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 - 50 ,"r : Relancer");
