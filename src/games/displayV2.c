@@ -5,11 +5,18 @@
 
 SDL_Window* initWindow(char* title){
 	SDL_Window* win;
+		if(rules==0){ // pour afficher la fenetre de Rush hour 
 	win = SDL_CreateWindow(title,
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		SCREEN_X, SCREEN_Y,
-		SDL_WINDOW_SHOWN);
+		SDL_WINDOW_SHOWN);}
+		if(rules==1){ // pôur afficher la fenetre de Ane rouge
+	win = SDL_CreateWindow(title,
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		SCREEN_X, SCREEN_Y+10,
+		SDL_WINDOW_SHOWN);}
  
     if (win == NULL)
     {
@@ -85,10 +92,18 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	SDL_SetRenderDrawColor(rdr, 200,200,200, 255);
 	SDL_RenderClear(rdr);
 	SDL_SetRenderDrawColor(rdr, 0,200,0, 255);
+	if(rules==0){//pour la Sortie des piece de Rush hour 
 	rect.y = (SCREEN_Y/game_height(g))*2;
 	rect.x = (SCREEN_Y/game_height(g))*game_width(g);
 	rect.h = (SCREEN_Y/game_height(g));
 	rect.w = 10;
+	}
+	if(rules==1){ //pour la Sortie des piece de Ane rouge ..manque de precision
+	rect.y = 0;
+	rect.x = (SCREEN_Y/game_height(g))*2-20;
+	rect.h = 10;
+	rect.w = (SCREEN_Y/game_height(g));
+}
 	SDL_RenderFillRect(rdr, &rect);
 	for(int i = 0; i < game_nb_pieces(g); ++i){
 		SDL_SetRenderDrawColor(rdr, color[i][0],color[i][1],color[i][2], 255);
