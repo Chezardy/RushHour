@@ -4,9 +4,7 @@ L'executable prend les arguments suivants :
 #Choix du jeux :
 	-rushhour pour lancer le rush-hour
 	-anerouge pour lancer l'Ane Rouge
-#Choix de l'affichage :
-	-nocolor pour lancer l'affichage simplifié sans couleur
-	-text pour afficher la grille uniquement par les coordonnées des pieces
+
 #Solveur :
 	-solveur pour utiliser le solveur
 
