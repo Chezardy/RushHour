@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "displayV2.h"
 
+
 SDL_Window* initWindow(char* title){
 	SDL_Window* win;
 	 
@@ -152,21 +153,19 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	}
 
 	//Affichage du nombre de mouvements
-	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,"Mouvements : ");
-	char char_moves[2];
-	sprintf(char_moves,"%d",game_nb_moves(g));
-	if(game_nb_moves(g)<10) // Décale l'affichage en fonction du nombre à afficher
-		drawText(rdr, font, fontColor,SCREEN_X-100 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
-	else if(game_nb_moves(g)>=10 && game_nb_moves(g)<100)
-		drawText(rdr, font, fontColor,SCREEN_X-90 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
-	else if(game_nb_moves(g)>=100 && game_nb_moves(g)<1000)
-		drawText(rdr, font, fontColor,SCREEN_X-80 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
-	else 
-		drawText(rdr, font, fontColor,SCREEN_X-70 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
+	char str[CONST_S];
+	char strf[CONST_S];
+	
+	
+	sprintf(str," Mouvments : %d ",g->nb_mouv);// Convertire le nb_mouv to caractere 
+	sprintf(strf," %d mouvments",g->nb_mouv);
+	
+	//char*s=(char*)itoa(g->nb_mouv);
+	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -200 ,str); //affichage nombre de mouvments 
 
 	//Affichage des règles
-	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 - 50 ,"r : Relancer");
-	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 ,"q : Quitter");
+	drawText(rdr, font, fontColor,(SCREEN_Y/game_height(g))*game_width(g)+120 ,SCREEN_Y-40 ,"R : Relancer");
+	drawText(rdr, font, fontColor,SCREEN_X-120 ,SCREEN_Y-40 ,"Q : Quitter");
 
 	if (popup != 0){
 		SDL_SetRenderDrawColor(rdr, 50, 50, 50, 170);
@@ -180,9 +179,9 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 		} else if (popup == 2){
 			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Voulez-vous quitter le jeu en cours ?");
 		} else if (popup == 3){
-			drawText(rdr, font, fontColor,SCREEN_X/3 ,SCREEN_Y/2-SCREEN_Y/8 ,"Partie finie en ");
-			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,char_moves);
-			drawText(rdr, font, fontColor,SCREEN_X/2+SCREEN_X/6 ,SCREEN_Y/2-SCREEN_Y/8 ,"mouvements !");
+			drawText(rdr, font, fontColor,SCREEN_X/3+30 ,SCREEN_Y/2-SCREEN_Y/8 ,"Partie finie en ");
+			
+			drawText(rdr, font, fontColor,SCREEN_X/2+SCREEN_X/6-130 ,SCREEN_Y/2-SCREEN_Y/8 ,strf);
 			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/17 ,"Voulez vous rejouer ?");
 		}
 		drawText(rdr, font, fontColor,SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Echap : Non");
