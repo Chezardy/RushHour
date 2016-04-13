@@ -152,7 +152,17 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	}
 
 	//Affichage du nombre de mouvements
-	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,"Mouvements : ");//mais ou est le compteurr ??
+	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,"Mouvements : ");
+	char char_moves[2];
+	sprintf(char_moves,"%d",game_nb_moves(g));
+	if(game_nb_moves(g)<10) // Décale l'affichage en fonction du nombre à afficher
+		drawText(rdr, font, fontColor,SCREEN_X-100 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
+	else if(game_nb_moves(g)>=10 && game_nb_moves(g)<100)
+		drawText(rdr, font, fontColor,SCREEN_X-90 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
+	else if(game_nb_moves(g)>=100 && game_nb_moves(g)<1000)
+		drawText(rdr, font, fontColor,SCREEN_X-80 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
+	else 
+		drawText(rdr, font, fontColor,SCREEN_X-70 ,SCREEN_Y/2-SCREEN_Y/6 -150 ,char_moves);
 
 	//Affichage des règles
 	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 - 50 ,"r : Relancer");
@@ -169,8 +179,8 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Voulez-vous lancer une nouvelle partie ?");
 		} else if (popup == 2){
 			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Voulez-vous quitter le jeu en cours ?");
-		} else if (popup == 1){
-			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Partie Finie !");
+		} else if (popup == 3){
+			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Partie Finie ! Voulez vous rejouer ?");
 		}
 		drawText(rdr, font, fontColor,SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Echap : Non");
 		drawText(rdr, font, fontColor,SCREEN_X-SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Entree : Oui");
