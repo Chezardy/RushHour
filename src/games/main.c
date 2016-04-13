@@ -50,20 +50,21 @@ int main(int argc, char* argv[]) {
 	//Lecture des arguments
 	for (int i = 1; i < argc;i++) {
 		if (streq(argv[i],"-anerouge")){
+			printf("Lancement du jeu Ane Rouge ");
 			getGame = &AR_getGame;
 			game_over = &game_over_ar;
 			rules = 1;
 			win = initWindow("Ane Rouge");
 			rdr = initRenderer(win);
 		} else if (streq(argv[i],"-rushhour")){
-			printf("Lancement du jeu Rush-Hour\n");
+			printf("Lancement du jeu Rush Hour ");
 			getGame = &RH_getGame;
 			game_over = &game_over_hr;
 			rules = 0;
 			win = initWindow("Rush Hour");
 			rdr = initRenderer(win);
-		} else if (streq(argv[i],"-solveur")){
-			printf("Utilisation du solveur\n");
+		} if (streq(argv[i],"-solveur")){
+			printf("avec le solveur\n");
 			use_solveur = true;
 		}
 	}

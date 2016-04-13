@@ -180,7 +180,10 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 		} else if (popup == 2){
 			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Voulez-vous quitter le jeu en cours ?");
 		} else if (popup == 3){
-			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Partie Finie ! Voulez vous rejouer ?");
+			drawText(rdr, font, fontColor,SCREEN_X/3 ,SCREEN_Y/2-SCREEN_Y/8 ,"Partie finie en ");
+			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,char_moves);
+			drawText(rdr, font, fontColor,SCREEN_X/2+SCREEN_X/6 ,SCREEN_Y/2-SCREEN_Y/8 ,"mouvements !");
+			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/17 ,"Voulez vous rejouer ?");
 		}
 		drawText(rdr, font, fontColor,SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Echap : Non");
 		drawText(rdr, font, fontColor,SCREEN_X-SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Entree : Oui");
