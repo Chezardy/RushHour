@@ -2,6 +2,8 @@
 #define DISP2
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <stdlib.h>
+#include <strings.h>
 
 #define SCREEN_X 1280
 #define SCREEN_Y 720

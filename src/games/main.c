@@ -64,10 +64,12 @@ int main(int argc, char* argv[]) {
 			win = initWindow("Rush Hour");
 			rdr = initRenderer(win);
 		} if (streq(argv[i],"-solveur")){
-			printf("avec le solveur\n");
+			printf("avec le solveur");
 			use_solveur = true;
 		}
 	}
+	printf("\n");
+	
 	if (getGame == NULL) {
 		printf("Liste des arguments possibles :\n-anerouge : Ane rouge\n-rushhour : Rush Hour\n");
 		exit(0);
