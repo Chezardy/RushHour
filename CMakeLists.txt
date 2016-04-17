@@ -5,7 +5,8 @@ project(RUSH_HOUR)
 ADD_DEFINITIONS(-std=c99 -g -Wall -Werror)
 
 include_directories(${RUSH_HOUR_SOURCE_DIR}/src/libgame
-					${RUSH_HOUR_SOURCE_DIR}/src/games)
+					${RUSH_HOUR_SOURCE_DIR}/src/games
+					${RUSH_HOUR_SOURCE_DIR}/src/solveur)
 
 #Le répertoire contenant les codes source
 add_subdirectory(src)
