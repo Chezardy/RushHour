@@ -43,19 +43,20 @@ bool game_equals(game g1, game g2){
 }
 
 int solve(game g, int size_x, int size_y, int nb_pieces, piece* pieces, int rules){
-	//On creer 2 tableau de game, de taille MAX_STATES
+	//On creer 2 tableau de game, de taille tab_len
+	int tab_len = MAX_STATES*(1+(rules*100));
 	game *state1;
 	game *state2;
-	state1 = malloc(MAX_STATES*(sizeof(game)));
-	for (int i = 0; i < MAX_STATES; i++){
+	state1 = malloc(tab_len*(sizeof(game)));
+	for (int i = 0; i < tab_len; i++){
 		state1[i] = new_game(size_x, size_y, nb_pieces, pieces);
 	}
-	state2 = malloc(MAX_STATES*(sizeof(game)));
-	for (int i = 0; i < MAX_STATES; i++){
+	state2 = malloc(tab_len*(sizeof(game)));
+	for (int i = 0; i < tab_len; i++){
 		state2[i] = new_game(size_x, size_y, nb_pieces, pieces);
 	}
 	// Et un tableau de int qui comprend la dernière direction utilisée sur un game pour chaques pieces
-	int *prevDir = malloc(MAX_STATES*(sizeof(int))*nb_pieces);
+	int *prevDir = malloc(tab_len*(sizeof(int))*nb_pieces);
 	int nb_states = 1;
 	int tmp_nb_states = 0;
 	int skip = 1; // pour alterner les tableaux stateX
@@ -81,14 +82,14 @@ int solve(game g, int size_x, int size_y, int nb_pieces, piece* pieces, int rule
 			for (int p = 0; p < game_nb_pieces(g); ++p){
 				for (int d = 0; d < 4; ++d){
 					//On verifie que la direction n'est pas l'opposé de celle utilisé précedement sur la piece
-					if (nb_states == 1 || (!(prevDir[tmp_nb_states%MAX_STATES+p] == 0 && d == 2)
-										&& !(prevDir[tmp_nb_states%MAX_STATES+p] == 1 && d == 3)
-										&& !(prevDir[tmp_nb_states%MAX_STATES+p] == 2 && d == 0)
-										&& !(prevDir[tmp_nb_states%MAX_STATES+p] == 3 && d == 1))){
-						copy_game(prevState[i],currState[tmp_nb_states%MAX_STATES]);
-						if (play_move(currState[tmp_nb_states%MAX_STATES],p,d,1)) {
+					if (nb_states == 1 || (!(prevDir[tmp_nb_states%tab_len+p] == 0 && d == 2)
+										&& !(prevDir[tmp_nb_states%tab_len+p] == 1 && d == 3)
+										&& !(prevDir[tmp_nb_states%tab_len+p] == 2 && d == 0)
+										&& !(prevDir[tmp_nb_states%tab_len+p] == 3 && d == 1))){
+						copy_game(prevState[i],currState[tmp_nb_states%tab_len]);
+						if (play_move(currState[tmp_nb_states%tab_len],p,d,1)) {
 							//Si le mouvement est valide on passe au suivant dans le tableau
-							prevDir[tmp_nb_states%MAX_STATES+p] = d;
+							prevDir[tmp_nb_states%tab_len+p] = d;
 							tmp_nb_states++;
 						}
 					}
@@ -96,8 +97,8 @@ int solve(game g, int size_x, int size_y, int nb_pieces, piece* pieces, int rule
 			}
 		}
 		if (DEBUG == 1) printf(" (%d potential new states)\n", tmp_nb_states);
-		//On vérifie que l'on a pas dépassé MAX_STATES
-		if (tmp_nb_states >= MAX_STATES) tmp_nb_states = MAX_STATES-1;
+		//On vérifie que l'on a pas dépassé tab_len
+		if (tmp_nb_states >= tab_len) tmp_nb_states = tab_len-1;
 		nb_states = tmp_nb_states;
 		minMove = -1;
 		//On vérifie pour chaques game si l'une ou plusieurs ne sont pas finie
