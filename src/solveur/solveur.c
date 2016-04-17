@@ -8,7 +8,7 @@
 #include "rush-hour.h"
 #include "anerouge.h"
 
-#define MAX_STATES 	1000000
+#define MAX_STATES 	100000
 #define MAX_TRY 	10000
 
 #define DEBUG 0
@@ -44,7 +44,7 @@ bool game_equals(game g1, game g2){
 
 int solve(game g, int size_x, int size_y, int nb_pieces, piece* pieces, int rules){
 	//On creer 2 tableau de game, de taille tab_len
-	int tab_len = MAX_STATES*(1+(rules*100));
+	int tab_len = MAX_STATES*(1+(rules*10));
 	game *state1;
 	game *state2;
 	state1 = malloc(tab_len*(sizeof(game)));
