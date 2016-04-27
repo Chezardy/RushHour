@@ -97,22 +97,22 @@ int main(int argc, char* argv[]) {
     while (!quit){
 		if (currentGame == NULL) currentGame = (getGame)();
 		
-        if (wait_conf == 0) gestionInputs(&input);
+        gestionInputs(&input);
         
 		SDL_Display(currentGame, rdr, font, wait_conf);
 		
-		//Commandes ULDR
+		//Commandes ULDR (fonctionne si pas de popup à l'écran)
 		if (!use_solveur){
-			if (input.left == 1) {
+			if (input.left == 1 && wait_conf == 0) {
 				play_move(currentGame,target,LEFT,1);
 			}
-			if (input.right == 1) {
+			if (input.right == 1 && wait_conf == 0) {
 				play_move(currentGame,target,RIGHT,1);
 			}
-			if (input.up == 1) {
+			if (input.up == 1 && wait_conf == 0) {
 				play_move(currentGame,target,UP,1);
 			}
-			if (input.down == 1) {
+			if (input.down == 1 && wait_conf == 0) {
 				play_move(currentGame,target,DOWN,1);
 			}
 		} else {
