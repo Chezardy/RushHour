@@ -25,12 +25,12 @@ int main(int argc, char* argv[]) {
 	bool			(*game_over)(cgame);
 	bool			use_solveur;
 	SDL_Window* 	win;
-	SDL_Renderer* 	rdr;	
+	SDL_Renderer* 	rdr;
 	Input 			input;
-	unsigned int 	sync;
-    bool 			quit;
+	unsigned int 	sync; //représente le temps à attendre entre chaque rafraichissement d'affichage
+	bool 			quit;
 	int				wait_conf;//1:reset, 2:quitter, 3:Fin de partie
-	int				target;
+	int				target; //représente le numero de la piece sélectionnée
 	TTF_Font*		font;
 	
 	sync = 64;
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	input.mouse_x = 0;
 	input.mouse_y = 0;
 	input.mouse = 0;
-    quit = false;
+	quit = false;
 	use_solveur = false;
 	currentGame = NULL;
 	getGame = NULL;
@@ -93,12 +93,12 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	
-    // Boucle principale du jeu 
-    while (!quit){
+	// Boucle principale du jeu 
+	while (!quit){
 		if (currentGame == NULL) currentGame = (getGame)();
 		
-        gestionInputs(&input);
-        
+		gestionInputs(&input);
+		
 		SDL_Display(currentGame, rdr, font, wait_conf);
 		
 		//Commandes ULDR (fonctionne si pas de popup à l'écran)
@@ -148,11 +148,11 @@ int main(int argc, char* argv[]) {
 		//Quitter popup
 		if (input.escape == 1 && wait_conf == 3) quit = true;
 		if (input.escape == 1 && wait_conf != 0) wait_conf = 0;
-        if (!use_solveur || wait_conf != 0){
+		if (!use_solveur || wait_conf != 0){
 			delay(sync);
 			sync = SDL_GetTicks() + 64;
 		}
-    }
+	}
 	TTF_CloseFont(font);
 	SDL_Free(win,rdr);
 	delete_game(currentGame);

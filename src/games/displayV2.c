@@ -6,30 +6,27 @@
 
 SDL_Window* initWindow(char* title){
 	SDL_Window* win;
-	 
-		win = SDL_CreateWindow(title,
+	win = SDL_CreateWindow(title,
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
 			SCREEN_X, SCREEN_Y+10,
 			SDL_WINDOW_SHOWN);
-	
-	
- 
-    if (win == NULL){
-        printf("Erreur SDL : Initialisation de la fenetre SDL");
-        exit(1);
-    }
+
+	if (win == NULL){
+		printf("Erreur SDL : Initialisation de la fenetre SDL");
+		exit(1);
+	}
 	return win;
 }
 
 SDL_Renderer* initRenderer(SDL_Window* win){
 	SDL_Renderer* rdr = NULL;
-    rdr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+	rdr = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 	//printf("Renderer : %p\n", rdr); //sert au débuggage
-    if (rdr == NULL) {
-        printf("Erreur SDL : Initialisation du renderer SDL\n");
-        exit(1);
-    }
+	if (rdr == NULL) {
+		printf("Erreur SDL : Initialisation du renderer SDL\n");
+		exit(1);
+	}
 	
 	if(TTF_Init() < 0) {
 		printf("Erreur SDL : %s\n", TTF_GetError());
@@ -41,11 +38,11 @@ SDL_Renderer* initRenderer(SDL_Window* win){
 
 void SDL_Free(SDL_Window* win, SDL_Renderer* rdr){
 	TTF_Quit();
-    SDL_DestroyRenderer(rdr);
-    rdr = NULL;
-    SDL_DestroyWindow(win);
-    win = NULL;
-    SDL_Quit();
+	SDL_DestroyRenderer(rdr);
+	rdr = NULL;
+	SDL_DestroyWindow(win);
+	win = NULL;
+	SDL_Quit();
 }
 
 int color[14][3] = {
@@ -70,8 +67,8 @@ void drawText(SDL_Renderer* rdr, TTF_Font* font, SDL_Color color, int x, int y, 
 	SDL_Surface* text;
 	SDL_Texture *texFont;
 	text = TTF_RenderText_Blended(font, txt, color);
-	rect.x = x;//(SCREEN_Y/game_height(g))*game_nb_pieces(g);
-	rect.y = y;//SCREEN_Y/game_height(g);
+	rect.x = x;
+	rect.y = y;
 	texFont = SDL_CreateTextureFromSurface(rdr, text);
 	SDL_QueryTexture(texFont, NULL, NULL, &rect.w, &rect.h);
 	rect.x -= rect.w/2;
@@ -85,34 +82,31 @@ void drawText(SDL_Renderer* rdr, TTF_Font* font, SDL_Color color, int x, int y, 
 
 void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	SDL_Rect rect;
-	double px = SCREEN_X/100, py = SCREEN_Y/100;
+	double px = SCREEN_X/100, py = SCREEN_Y/100; //représentent 1% de l'écran (50*px représente 50%)
 	SDL_Color fontColor = {255, 255, 255};
 
-	rect.w = (SCREEN_Y/game_height(g));
-	rect.h = (SCREEN_Y/game_height(g));
-
-	SDL_SetRenderDrawColor(rdr, 192,192,192, 255);
+	SDL_SetRenderDrawColor(rdr, 192,192,192, 255); //fond gris de la fenetre
 	SDL_RenderClear(rdr);
-	SDL_SetRenderDrawColor(rdr, 0,255,127, 255);
+	SDL_SetRenderDrawColor(rdr, 0,255,127, 255); //couleur de la sortie
 
 	if(rules==0){//pour la Sortie des piece de Rush hour 
 		rect.y = (SCREEN_Y/game_height(g))*2;
 		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
-		rect.h = (SCREEN_Y/game_height(g));
+		rect.h = SCREEN_Y/game_height(g);
 		rect.w = 10;
 		SDL_RenderFillRect(rdr, &rect);
 		SDL_SetRenderDrawColor(rdr, 105,105,105, 255);
 		rect.y = 0;
 		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
 		rect.w = 10;
-		rect.h = ((SCREEN_Y/game_height(g))*2);
+		rect.h = (SCREEN_Y/game_height(g))*2;
 		SDL_RenderFillRect(rdr, &rect);
-		rect.y = ((SCREEN_Y/game_height(g))*3);
+		rect.y = (SCREEN_Y/game_height(g))*3;
 		rect.x = (SCREEN_Y/game_height(g))*game_width(g);
 		rect.w = 10;
-		rect.h = ((SCREEN_Y/game_height(g))*3);
+		rect.h = (SCREEN_Y/game_height(g))*3;
 		SDL_RenderFillRect(rdr, &rect);
-		rect.y = (SCREEN_Y);
+		rect.y = SCREEN_Y;
 		rect.x = 0;
 		rect.w = SCREEN_X ;
 		rect.h = 10;
@@ -122,7 +116,7 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	else if(rules==1){ //pour la Sortie des piece de Ane rouge 
 
 		rect.y = SCREEN_Y;
-		rect.x = (SCREEN_Y/game_height(g));
+		rect.x = SCREEN_Y/game_height(g);
 		rect.h = 10;
 		rect.w = (SCREEN_Y/game_height(g))*2;
 		SDL_RenderFillRect(rdr, &rect);
@@ -134,12 +128,12 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 		SDL_RenderFillRect(rdr, &rect);
 		rect.y = SCREEN_Y;
 		rect.x = 0;
-		rect.w = (SCREEN_Y/game_height(g));
+		rect.w = SCREEN_Y/game_height(g);
 		rect.h = 10;
 		SDL_RenderFillRect(rdr, &rect);
 		rect.y = SCREEN_Y;
-		rect.x = ((SCREEN_Y/game_height(g))*3);
-		rect.w = ((SCREEN_Y/game_height(g))*6);
+		rect.x = (SCREEN_Y/game_height(g))*3;
+		rect.w = (SCREEN_Y/game_height(g))*6;
 		rect.h = 10;
 		SDL_RenderFillRect(rdr, &rect);
 	}
@@ -148,7 +142,7 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	for(int i = 0; i < game_nb_pieces(g); ++i){
 		SDL_SetRenderDrawColor(rdr, color[i][0],color[i][1],color[i][2], 255);
 		rect.x = get_x(game_piece(g,i))*(SCREEN_Y/game_height(g));
-		rect.y = (SCREEN_Y - (get_y(game_piece(g,i))*(SCREEN_Y/game_height(g))));
+		rect.y = SCREEN_Y - (get_y(game_piece(g,i))*(SCREEN_Y/game_height(g)));
 		rect.w = get_width(game_piece(g,i))*(SCREEN_Y/game_height(g));
 		rect.h = get_height(game_piece(g,i))*(SCREEN_Y/game_height(g));
 		rect.y -= rect.h;
@@ -163,7 +157,6 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	drawText(rdr, font, fontColor,90*px ,5*py ,disp_moves); //affichage nombre de mouvements 
 
 	//Affichage des règles
-	//SCREEN_Y/game_height(g))*game_width(g)+py*10
 	drawText(rdr, font, fontColor, 90*px,85*py ,"R : Relancer");
 	drawText(rdr, font, fontColor, 90*px ,95*py ,"Q : Quitter");
 

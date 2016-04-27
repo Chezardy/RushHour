@@ -28,14 +28,14 @@ int main(int argc, char *argv[]){
 
 	game g = new_game(6,6,nb, pieces);
 
- 	if(play_move(g,1,1,1)) return EXIT_FAILURE;
- 	if(play_move(g,3,3,1)) return EXIT_FAILURE;
- 	if(play_move(g,2,1,1)) return EXIT_FAILURE;
- 	if(!play_move(g,0,3,2)) return EXIT_FAILURE;
+	if(play_move(g,1,1,1)) return EXIT_FAILURE;
+	if(play_move(g,3,3,1)) return EXIT_FAILURE;
+	if(play_move(g,2,1,1)) return EXIT_FAILURE;
+	if(!play_move(g,0,3,2)) return EXIT_FAILURE;
 
- 	delete_game(g);
- 	for(int i=0;i<nb;i++)
- 		delete_piece(pieces[i]);
+	delete_game(g);
+	for(int i=0;i<nb;i++)
+		delete_piece(pieces[i]);
 
 	return EXIT_SUCCESS;
 }
