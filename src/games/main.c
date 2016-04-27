@@ -36,8 +36,20 @@ int main(int argc, char* argv[]) {
 	sync = 64;
 	wait_conf = 0;
 	target = 0;
-	input.down = 0; // à faire pour tout l'input ?
+	//Initialisation des commandes à 0 (Non appuyées)
+	input.left = 0;
+	input.right = 0;
+	input.up = 0;
+	input.down = 0;
 	input.enter = 0;
+	input.erase = 0;
+	input.pause = 0;
+	input.newGame = 0;
+	input.escape = 0;
+	input.quit = 0;
+	input.mouse_x = 0;
+	input.mouse_y = 0;
+	input.mouse = 0;
     quit = false;
 	use_solveur = false;
 	currentGame = NULL;
@@ -76,7 +88,6 @@ int main(int argc, char* argv[]) {
 	}
 	//Initialisation Police de caractère.
 	font = TTF_OpenFont("OpenSans-Regular.ttf", 40);
-	//printf("font main : %p\n", font); //sert au débuggage
 	if (font == NULL) {
 		printf("Erreur SDL_ttf : %s\n", TTF_GetError());
 		exit(1);
@@ -86,7 +97,7 @@ int main(int argc, char* argv[]) {
     while (!quit){
 		if (currentGame == NULL) currentGame = (getGame)();
 		
-        gestionInputs(&input);
+        if (wait_conf == 0) gestionInputs(&input);
         
 		SDL_Display(currentGame, rdr, font, wait_conf);
 		
@@ -94,32 +105,24 @@ int main(int argc, char* argv[]) {
 		if (!use_solveur){
 			if (input.left == 1) {
 				play_move(currentGame,target,LEFT,1);
-				//printf("LEFT\n");
 			}
 			if (input.right == 1) {
 				play_move(currentGame,target,RIGHT,1);
-				//printf("RIGHT\n");
 			}
 			if (input.up == 1) {
 				play_move(currentGame,target,UP,1);
-				//printf("UP\n");
 			}
 			if (input.down == 1) {
 				play_move(currentGame,target,DOWN,1);
-				//printf("DOWN\n");
 			}
 		} else {
 			if (wait_conf == 0) 
 				brutStrategy(currentGame, game_over);
 		}
 		//Click souris
-		/*int coord_X = input.mouse_x/(SCREEN_Y/game_height(currentGame));			//Pour le printf qui sert à débugguer
-		int coord_Y = (SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame));	//De même
-		*/
 		if (input.mouse == 1){
 			if (game_square_piece(currentGame, input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame))) != -1) 
 					target = game_square_piece(currentGame,  input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame)));
-			//printf("%d : %d, p%d\n",coord_X,coord_Y, target);
 		}
 		//Quitter Partie
 		if (wait_conf == 2 && input.quit == 0 && input.enter == 1){

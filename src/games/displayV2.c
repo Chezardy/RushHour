@@ -80,7 +80,7 @@ void drawText(SDL_Renderer* rdr, TTF_Font* font, SDL_Color color, int x, int y, 
 
 void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 	SDL_Rect rect;
-	
+	double px = SCREEN_X/100, py = SCREEN_Y/100;
 	SDL_Color fontColor = {255, 255, 255};
 
 	rect.w = (SCREEN_Y/game_height(g));
@@ -139,8 +139,6 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 		SDL_RenderFillRect(rdr, &rect);
 	}
 	
-	
-	
 	//Affichage des pièces
 	for(int i = 0; i < game_nb_pieces(g); ++i){
 		SDL_SetRenderDrawColor(rdr, color[i][0],color[i][1],color[i][2], 255);
@@ -151,38 +149,61 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 		rect.y -= rect.h;
 		SDL_RenderFillRect(rdr, &rect);
 	}
-
+	
 	//Affichage du nombre de mouvements
 	char disp_moves[20]; //contiendra l'affichage du nombre de mouvements
 	char end_msg[30]; //contiendra le message de fin de partie
 	
 	sprintf(disp_moves," Mouvements : %d ",game_nb_moves(g));// Convertie le nb_mouv en caractère 
-	drawText(rdr, font, fontColor,SCREEN_X-250 ,SCREEN_Y/2-SCREEN_Y/6 -200 ,disp_moves); //affichage nombre de mouvements 
+	drawText(rdr, font, fontColor,90*px ,5*py ,disp_moves); //affichage nombre de mouvements 
 
 	//Affichage des règles
-	drawText(rdr, font, fontColor,(SCREEN_Y/game_height(g))*game_width(g)+120 ,SCREEN_Y-40 ,"R : Relancer");
-	drawText(rdr, font, fontColor,SCREEN_X-120 ,SCREEN_Y-40 ,"Q : Quitter");
+	//SCREEN_Y/game_height(g))*game_width(g)+py*10
+	drawText(rdr, font, fontColor, 90*px,85*py ,"R : Relancer");
+	drawText(rdr, font, fontColor, 90*px ,95*py ,"Q : Quitter");
 
 	if (popup != 0){
 		SDL_SetRenderDrawColor(rdr, 50, 50, 50, 170);
 		rect.x = 0;
-		rect.y = SCREEN_Y/4;
+		rect.y = 25*py;
 		rect.w = SCREEN_X;
-		rect.h = SCREEN_Y/2;
+		rect.h = 50*py;
 		SDL_RenderFillRect(rdr, &rect);
 		if (popup == 1){
-			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Voulez-vous lancer une nouvelle partie ?");
+			drawText(rdr, font, fontColor,50*px ,50*py-SCREEN_Y/8 ,"Voulez-vous lancer une nouvelle partie ?");
 		} else if (popup == 2){
-			drawText(rdr, font, fontColor,SCREEN_X/2 ,SCREEN_Y/2-SCREEN_Y/8 ,"Voulez-vous quitter le jeu en cours ?");
+			drawText(rdr, font, fontColor,50*px ,50*py-SCREEN_Y/8 ,"Voulez-vous quitter le jeu en cours ?");
 		} else if (popup == 3){
 
 			sprintf(end_msg,"Partie finie en %d mouvements",game_nb_moves(g));
-			drawText(rdr, font, fontColor,SCREEN_X/2, SCREEN_Y/2-SCREEN_Y/8, end_msg);
-			drawText(rdr, font, fontColor,SCREEN_X/2, SCREEN_Y/2-SCREEN_Y/17, "Voulez vous rejouer ?");
+			drawText(rdr, font, fontColor,50*px, 50*py-SCREEN_Y/8, end_msg);
+			drawText(rdr, font, fontColor,50*px, 50*py-SCREEN_Y/17, "Voulez vous rejouer ?");
 		}
-		drawText(rdr, font, fontColor,SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Echap : Non");
-		drawText(rdr, font, fontColor,SCREEN_X-SCREEN_X/6 ,SCREEN_Y/2+SCREEN_Y/8 ,"Entree : Oui");
+		drawText(rdr, font, fontColor,16.6*px ,50*py+SCREEN_Y/8 ,"Echap : Non");
+		drawText(rdr, font, fontColor,SCREEN_X-16.6*px ,50*py+SCREEN_Y/8 ,"Entree : Oui");
 	}
+	/*if (popup != 0){
+		SDL_SetRenderDrawColor(rdr, 50, 50, 50, 170);
+		rect.x = 0;
+		rect.y = 25*py;
+		rect.w = 100*px;
+		rect.h = 50*py;
+		SDL_RenderFillRect(rdr, &rect);
+		if (popup == 1){
+			drawText(rdr, font, fontColor,50*px ,37.5*py ,"Voulez-vous lancer une nouvelle partie ?");
+		} else if (popup == 2){
+			drawText(rdr, font, fontColor,50*px ,37.5*py ,"Voulez-vous quitter le jeu en cours ?");
+		} else if (popup == 3){
+			drawText(rdr, font, fontColor,50*px ,37.5*py ,"Partie Finie !");
+		}
+		if (popup != 3){
+			drawText(rdr, font, fontColor,33*px ,62.5*py ,"Echap : Non");
+			drawText(rdr, font, fontColor,66*px ,62.5*py ,"Entree : Oui");
+		} else {
+			drawText(rdr, font, fontColor,33*px ,62.5*py ,"Echap : Quitter");
+			drawText(rdr, font, fontColor,66*px ,62.5*py ,"Entree : Continuer");
+		}
+	}*/
 	SDL_RenderPresent(rdr);
 	SDL_Delay(50);
 }
