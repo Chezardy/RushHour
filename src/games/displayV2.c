@@ -40,6 +40,8 @@ SDL_Renderer* initRenderer(SDL_Window* win){
 }
 
 void SDL_Free(SDL_Window* win, SDL_Renderer* rdr){
+	TTF_Quit();
+	
     SDL_DestroyRenderer(rdr);
     rdr = NULL;
     SDL_DestroyWindow(win);

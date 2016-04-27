@@ -1,6 +1,5 @@
 #include <piece.h>
 #include <game.h>
-#include "displayV1.h"
 #include "rush-hour.h"
 #include "utils.h"
 
