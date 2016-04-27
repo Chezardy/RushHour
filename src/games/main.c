@@ -121,7 +121,8 @@ int main(int argc, char* argv[]) {
 		}
 		//Click souris
 		if (input.mouse == 1){
-			if (game_square_piece(currentGame, input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame))) != -1) 
+			int tmp_x = input.mouse_x/(SCREEN_Y/game_height(currentGame)), tmp_y = (SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame));
+			if (tmp_y < game_height(currentGame) && tmp_x < game_width(currentGame) && game_square_piece(currentGame, tmp_x,tmp_y) != -1) 
 					target = game_square_piece(currentGame,  input.mouse_x/(SCREEN_Y/game_height(currentGame)),(SCREEN_Y-input.mouse_y)/(SCREEN_Y/game_height(currentGame)));
 		}
 		//Quitter Partie
