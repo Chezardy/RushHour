@@ -153,7 +153,6 @@ int main(int argc, char* argv[]) {
 			sync = SDL_GetTicks() + 64;
 		}
     }
-
 	TTF_CloseFont(font);
 	SDL_Free(win,rdr);
 	delete_game(currentGame);

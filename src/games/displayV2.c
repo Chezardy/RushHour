@@ -41,7 +41,6 @@ SDL_Renderer* initRenderer(SDL_Window* win){
 
 void SDL_Free(SDL_Window* win, SDL_Renderer* rdr){
 	TTF_Quit();
-	
     SDL_DestroyRenderer(rdr);
     rdr = NULL;
     SDL_DestroyWindow(win);
@@ -78,6 +77,10 @@ void drawText(SDL_Renderer* rdr, TTF_Font* font, SDL_Color color, int x, int y, 
 	rect.x -= rect.w/2;
 	rect.y -= rect.h/2;
 	SDL_RenderCopy(rdr, texFont, NULL, &rect);
+	SDL_DestroyTexture(texFont);
+	texFont = NULL;
+	SDL_FreeSurface(text);
+	text = NULL;
 }
 
 void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
@@ -172,40 +175,18 @@ void SDL_Display(game g, SDL_Renderer* rdr, TTF_Font* font, int popup){
 		rect.h = 50*py;
 		SDL_RenderFillRect(rdr, &rect);
 		if (popup == 1){
-			drawText(rdr, font, fontColor,50*px ,50*py-SCREEN_Y/8 ,"Voulez-vous lancer une nouvelle partie ?");
+			drawText(rdr, font, fontColor,50*px ,40*py ,"Voulez-vous lancer une nouvelle partie ?");
 		} else if (popup == 2){
-			drawText(rdr, font, fontColor,50*px ,50*py-SCREEN_Y/8 ,"Voulez-vous quitter le jeu en cours ?");
+			drawText(rdr, font, fontColor,50*px ,40*py ,"Voulez-vous quitter le jeu en cours ?");
 		} else if (popup == 3){
 
 			sprintf(end_msg,"Partie finie en %d mouvements",game_nb_moves(g));
-			drawText(rdr, font, fontColor,50*px, 50*py-SCREEN_Y/8, end_msg);
-			drawText(rdr, font, fontColor,50*px, 50*py-SCREEN_Y/17, "Voulez vous rejouer ?");
+			drawText(rdr, font, fontColor,50*px, 40*py, end_msg);
+			drawText(rdr, font, fontColor,50*px, 50*py, "Voulez vous rejouer ?");
 		}
-		drawText(rdr, font, fontColor,16.6*px ,50*py+SCREEN_Y/8 ,"Echap : Non");
-		drawText(rdr, font, fontColor,SCREEN_X-16.6*px ,50*py+SCREEN_Y/8 ,"Entree : Oui");
+		drawText(rdr, font, fontColor,16.6*px ,60*py ,"Echap : Non");
+		drawText(rdr, font, fontColor,SCREEN_X-16.6*px ,60*py,"Entree : Oui");
 	}
-	/*if (popup != 0){
-		SDL_SetRenderDrawColor(rdr, 50, 50, 50, 170);
-		rect.x = 0;
-		rect.y = 25*py;
-		rect.w = 100*px;
-		rect.h = 50*py;
-		SDL_RenderFillRect(rdr, &rect);
-		if (popup == 1){
-			drawText(rdr, font, fontColor,50*px ,37.5*py ,"Voulez-vous lancer une nouvelle partie ?");
-		} else if (popup == 2){
-			drawText(rdr, font, fontColor,50*px ,37.5*py ,"Voulez-vous quitter le jeu en cours ?");
-		} else if (popup == 3){
-			drawText(rdr, font, fontColor,50*px ,37.5*py ,"Partie Finie !");
-		}
-		if (popup != 3){
-			drawText(rdr, font, fontColor,33*px ,62.5*py ,"Echap : Non");
-			drawText(rdr, font, fontColor,66*px ,62.5*py ,"Entree : Oui");
-		} else {
-			drawText(rdr, font, fontColor,33*px ,62.5*py ,"Echap : Quitter");
-			drawText(rdr, font, fontColor,66*px ,62.5*py ,"Entree : Continuer");
-		}
-	}*/
 	SDL_RenderPresent(rdr);
 	SDL_Delay(50);
 }
